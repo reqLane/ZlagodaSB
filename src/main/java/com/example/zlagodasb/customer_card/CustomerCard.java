@@ -1,4 +1,4 @@
-package com.example.zlagodasb.CustomerCard;
+package com.example.zlagodasb.customer_card;
 
 import com.example.zlagodasb.check.Check;
 import jakarta.persistence.Entity;
