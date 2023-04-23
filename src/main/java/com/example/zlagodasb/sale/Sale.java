@@ -1,24 +1,19 @@
 package com.example.zlagodasb.sale;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 
-@Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "Sale")
 public class Sale {
-    @EmbeddedId
-    private SalePK PPK;
+    public static final String TABLE_NAME = "Sale";
 
-    @Column(nullable = false)
+    private String UPC;
+    private String checkNumber;
     private Integer productNumber;
-
-    @Column(nullable = false)
     private BigDecimal sellingPrice;
 }

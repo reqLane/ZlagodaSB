@@ -1,25 +1,22 @@
 package com.example.zlagodasb.employee;
 
 import com.example.zlagodasb.check.Check;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
-@Table(name="Employee")
+@ToString
 public class Employee {
-    @Id
-    private String idEmployee;
+    public static final String TABLE_NAME = "Employee";
 
+    private String idEmployee;
+    private String password;
     private String emplSurname;
     private String emplName;
     private String emplPatronymic;
@@ -29,8 +26,8 @@ public class Employee {
     private Date dateOfStart;
     private String phoneNumber;
     private String city;
+    private String street;
     private String zipCode;
 
-    @OneToMany(mappedBy = "employee")
     private List<Check> checks;
 }

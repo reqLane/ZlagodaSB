@@ -1,23 +1,19 @@
 package com.example.zlagodasb.customer_card;
 
 import com.example.zlagodasb.check.Check;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "Customer_Card")
+@ToString
 public class CustomerCard {
-    @Id
-    private String cardNumber;
+    public static final String TABLE_NAME = "Customer_Card";
 
+    private String cardNumber;
     private String custSurname;
     private String custName;
     private String custPatronymic;
@@ -27,6 +23,5 @@ public class CustomerCard {
     private String zipCode;
     private Integer percent;
 
-    @OneToMany(mappedBy = "card")
     private List<Check> checks;
 }

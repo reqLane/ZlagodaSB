@@ -1,37 +1,27 @@
 package com.example.zlagodasb.check;
 
-import com.example.zlagodasb.customer_card.CustomerCard;
-import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.sale.Sale;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity
 @Getter
 @Setter
-@Table(name="Checks")
+@ToString
 public class Check {
-    @Id
+    public static final String TABLE_NAME = "Checks";
+
     private String checkNumber;
-
+    private String idEmployee;
+    private String cardNumber;
     private Date printDate;
-
     private BigDecimal sumTotal;
     private BigDecimal vat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Employee employee;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CustomerCard card;
-
-    @OneToMany(mappedBy = "PPK.check")
     private List<Sale> sales = new ArrayList<>();
 }

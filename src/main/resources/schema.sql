@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Product(
     id_product INT NOT NULL AUTO_INCREMENT,
     category_number INT NOT NULL,
     product_name VARCHAR(50) NOT NULL,
+    manufacturer VARCHAR(20) NOT NULL,
     characteristics VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_product),
     FOREIGN KEY (category_number) REFERENCES Category(category_number)
@@ -18,8 +19,8 @@ CREATE TABLE IF NOT EXISTS Product(
 CREATE TABLE IF NOT EXISTS Store_Product(
     UPC VARCHAR(12) NOT NULL,
     id_product INT NOT NULL,
-    selling_price DECIMAL(13,4) NOT NULL,
-    products_number INT NOT NULL,
+    selling_price DECIMAL(13,4) NOT NULL CHECK (selling_price >= 0),
+    products_number INT NOT NULL CHECK (products_number >= 0),
     expiration_date DATE NOT NULL,
     promotional_product BOOLEAN NOT NULL,
     PRIMARY KEY (UPC),
@@ -30,12 +31,13 @@ CREATE TABLE IF NOT EXISTS Store_Product(
 
 CREATE TABLE IF NOT EXISTS Employee(
     id_employee VARCHAR(10) NOT NULL,
+    password VARCHAR(16) NOT NULL,
     empl_surname VARCHAR(50) NOT NULL,
     empl_name VARCHAR(50) NOT NULL,
     empl_patronymic VARCHAR(50) NULL,
     empl_role VARCHAR(10) NOT NULL,
     salary DECIMAL(13,4) NOT NULL,
-    date_of_birth DATE NOT NULL,
+    date_of_birth DATE NOT NULL CHECK (DATEDIFF('YEAR', date_of_birth, NOW()) >= 18),
     date_of_start DATE NOT NULL,
     phone_number VARCHAR(13) NOT NULL,
     city VARCHAR(50) NOT NULL,
@@ -47,14 +49,14 @@ CREATE TABLE IF NOT EXISTS Employee(
 CREATE TABLE IF NOT EXISTS Customer_Card(
     card_number VARCHAR(13) NOT NULL,
     cust_surname VARCHAR(50) NOT NULL,
+    cust_name VARCHAR(50) NOT NULL,
     cust_patronymic VARCHAR(50) NULL,
     phone_number VARCHAR(13) NOT NULL,
     city VARCHAR(50) NULL,
     street VARCHAR(50) NULL,
     zip_code VARCHAR(9) NULL,
-    percent INT NOT NULL,
-    PRIMARY KEY(card_number),
-
+    percent INT NOT NULL CHECK (percent >= 0),
+    PRIMARY KEY(card_number)
 );
 
 CREATE TABLE IF NOT EXISTS Checks(
@@ -62,7 +64,7 @@ CREATE TABLE IF NOT EXISTS Checks(
     id_employee VARCHAR(10) NOT NULL,
     card_number VARCHAR(13) NULL,
     print_date DATETIME NOT NULL,
-    sum_total DECIMAL(13,4) NOT NULL,
+    sum_total DECIMAL(13,4) NOT NULL CHECK (sum_total >= 0),
     vat DECIMAL(13,4) NOT NULL,
     PRIMARY KEY (check_number),
     FOREIGN KEY (id_employee) REFERENCES Employee(id_employee)
@@ -73,13 +75,11 @@ CREATE TABLE IF NOT EXISTS Checks(
         ON DELETE NO ACTION
 );
 
-
-
 CREATE TABLE IF NOT EXISTS Sale(
     UPC VARCHAR(12) NOT NULL,
     check_number VARCHAR(10) NOT NULL,
-    product_number INT NOT NULL,
-    selling_price DECIMAL(13,4) NOT NULL,
+    product_number INT NOT NULL CHECK (product_number >= 0),
+    selling_price DECIMAL(13,4) NOT NULL CHECK (selling_price >= 0),
     PRIMARY KEY(UPC, check_number),
     FOREIGN KEY (UPC) REFERENCES Store_Product(UPC)
         ON UPDATE CASCADE
@@ -88,4 +88,3 @@ CREATE TABLE IF NOT EXISTS Sale(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-

@@ -1,8 +1,6 @@
 package com.example.zlagodasb.product;
 
-import com.example.zlagodasb.category.Category;
-import com.example.zlagodasb.supply.Supply;
-import jakarta.persistence.*;
+import com.example.zlagodasb.store_product.StoreProduct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,28 +8,17 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "Product")
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_product;
+    public static final String TABLE_NAME = "Product";
 
-    @Column(nullable = false)
-    private String product_name;
-
-    @Column(nullable = false)
+    private Integer idProduct;
+    private Integer categoryNumber;
+    private String productName;
     private String manufacturer;
-
-    @Column(nullable = false)
     private String characteristics;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
-
-    @OneToMany(mappedBy = "product")
-    private List<Supply> supplies = new ArrayList<>();
+    private List<StoreProduct> storeProducts = new ArrayList<>();
 }
