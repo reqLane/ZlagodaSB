@@ -1,14 +1,21 @@
 package com.example.zlagodasb.customer_card;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CustomerCardService {
-    private CustomerCardRepo customerCardRepo;
+    private final CustomerCardRepo customerCardRepo;
+
+    @Autowired
+    public CustomerCardService(CustomerCardRepo customerCardRepo) {
+        this.customerCardRepo = customerCardRepo;
+    }
 
     //OPERATIONS
 
@@ -24,8 +31,12 @@ public class CustomerCardService {
         return customerCardRepo.findById(cardNumber);
     }
 
-    public CustomerCard create(CustomerCard customerCard) {
-        return customerCardRepo.create(customerCard);
+    public CustomerCard create(CustomerCardModel customerCardModel) {
+        CustomerCard entity = customerCardModel.toEntity();
+        String uuid = UUID.randomUUID().toString();
+        String cardNumber = uuid.substring(0, 4) + uuid.substring(9, 11) + uuid.substring(14, 16) + uuid.substring(19, 21) + uuid.substring(24, 27);
+        entity.setCardNumber(cardNumber);
+        return customerCardRepo.create(entity);
     }
 
     public void update(CustomerCard customerCard) {

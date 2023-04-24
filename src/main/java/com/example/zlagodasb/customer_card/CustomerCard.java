@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,5 +24,5 @@ public class CustomerCard {
     private String zipCode;
     private Integer percent;
 
-    private List<Check> checks;
+    private List<Check> checks = new ArrayList<>();
 }

@@ -14,21 +14,19 @@ import com.example.zlagodasb.store_product.StoreProduct;
 import com.example.zlagodasb.store_product.StoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/info")
+@RequestMapping("/general")
 public class MutualController {
-    private CategoryService categoryService;
-    private ProductService productService;
-    private StoreProductService storeProductService;
-    private EmployeeService employeeService;
-    private CustomerCardService customerCardService;
-    private CheckService checkService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
+    private final StoreProductService storeProductService;
+    private final EmployeeService employeeService;
+    private final CustomerCardService customerCardService;
+    private final CheckService checkService;
 
     @Autowired
     public MutualController(CategoryService categoryService,
@@ -58,7 +56,6 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
-
     @GetMapping("/getProductList")
     public ResponseEntity<List<String>> getProductList() {
         try {
@@ -72,7 +69,6 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
-
     @GetMapping("/getStoreProductList")
     public ResponseEntity<List<String>> getStoreProductList() {
         try {
@@ -86,7 +82,6 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
-
     @GetMapping("/getEmployeeList")
     public ResponseEntity<List<String>> getEmployeeList() {
         try {
@@ -100,7 +95,6 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
-
     @GetMapping("/getCustomerCardList")
     public ResponseEntity<List<String>> getCustomerCardList() {
         try {
@@ -114,7 +108,6 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
-
     @GetMapping("/getCheckList")
     public ResponseEntity<List<String>> getCheckList() {
         try {
@@ -126,6 +119,26 @@ public class MutualController {
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @PatchMapping("/updateCustomerCard")
+    public ResponseEntity<Boolean> updateCustomerCard(@RequestBody Map<String, String> data) {
+        try {
+            CustomerCard toUpdate = new CustomerCard();
+            toUpdate.setCardNumber(data.get("cardNumber"));
+            toUpdate.setCustSurname(data.get("custSurname"));
+            toUpdate.setCustName(data.get("custName"));
+            toUpdate.setCustPatronymic(data.get("custPatronymic"));
+            toUpdate.setPhoneNumber(data.get("phoneNumber"));
+            toUpdate.setCity(data.get("city"));
+            toUpdate.setStreet(data.get("street"));
+            toUpdate.setZipCode(data.get("zipCode"));
+            toUpdate.setPercent(Integer.parseInt(data.get("percent")));
+            customerCardService.update(toUpdate);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.zlagodasb.employee;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,12 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
-    private EmployeeRepo employeeRepo;
+    private final EmployeeRepo employeeRepo;
+
+    @Autowired
+    public EmployeeService(EmployeeRepo employeeRepo) {
+        this.employeeRepo = employeeRepo;
+    }
 
     //OPERATIONS
 
@@ -24,12 +30,12 @@ public class EmployeeService {
         return employeeRepo.findById(idEmployee);
     }
 
-    public Employee create(Employee employee) {
-        return employeeRepo.create(employee);
+    public Employee create(EmployeeModel employeeModel) {
+        return employeeRepo.create(employeeModel.toEntity());
     }
 
-    public void update(Employee employee) {
-        employeeRepo.update(employee);
+    public void update(EmployeeModel employeeModel) {
+        employeeRepo.update(employeeModel.toEntity());
     }
 
     public void deleteById(String idEmployee){

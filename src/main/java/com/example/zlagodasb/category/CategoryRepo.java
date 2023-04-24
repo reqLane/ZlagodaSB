@@ -38,7 +38,17 @@ public class CategoryRepo {
 
     //OPERATIONS
 
+    @Transactional(readOnly=true)
+    public Category findByCategoryName(String categoryName) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE category_name = ?";
+        List<Category> list = jdbcTemplate.query(sql, mapper, categoryName);
+        if(list.isEmpty()) return null;
 
+        Category result = list.get(0);
+        result.setProducts(productRepo.findByCategoryNumber(result.getCategoryNumber()));
+        return result;
+    }
 
     //DEFAULT OPERATIONS
 

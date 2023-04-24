@@ -45,6 +45,18 @@ public class ProductRepo {
         return jdbcTemplate.query(sql, mapper, categoryNumber);
     }
 
+    @Transactional(readOnly=true)
+    public Product findByProductName(String productName) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE product_name = ?";
+        List<Product> list = jdbcTemplate.query(sql, mapper, productName);
+        if(list.isEmpty()) return null;
+
+        Product result = list.get(0);
+        result.setStoreProducts(storeProductRepo.findByIdProduct(result.getIdProduct()));
+        return result;
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)

@@ -1,5 +1,6 @@
 package com.example.zlagodasb.store_product;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,12 @@ import java.util.List;
 
 @Service
 public class StoreProductService {
-    private StoreProductRepo storeProductRepo;
+    private final StoreProductRepo storeProductRepo;
+
+    @Autowired
+    public StoreProductService(StoreProductRepo storeProductRepo) {
+        this.storeProductRepo = storeProductRepo;
+    }
 
     //OPERATIONS
 
@@ -24,8 +30,8 @@ public class StoreProductService {
         return storeProductRepo.findById(UPC);
     }
 
-    public StoreProduct create(StoreProduct storeProduct) {
-        return storeProductRepo.create(storeProduct);
+    public StoreProduct create(StoreProductModel storeProductModel) {
+        return storeProductRepo.create(storeProductModel.toEntity());
     }
 
     public void update(StoreProduct storeProduct) {

@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,5 +30,5 @@ public class Employee {
     private String street;
     private String zipCode;
 
-    private List<Check> checks;
+    private List<Check> checks = new ArrayList<>();
 }
