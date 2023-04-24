@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS Category(
     category_number INT NOT NULL AUTO_INCREMENT,
-    category_name VARCHAR(50) NOT NULL,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (category_number)
 );
 
 CREATE TABLE IF NOT EXISTS Product(
     id_product INT NOT NULL AUTO_INCREMENT,
     category_number INT NOT NULL,
-    product_name VARCHAR(50) NOT NULL,
+    product_name VARCHAR(50) NOT NULL UNIQUE,
     manufacturer VARCHAR(20) NOT NULL,
     characteristics VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_product),
