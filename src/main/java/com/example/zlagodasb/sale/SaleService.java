@@ -1,5 +1,6 @@
 package com.example.zlagodasb.sale;
 
+import com.example.zlagodasb.sale.model.SaleInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,9 @@ public class SaleService {
 
     //OPERATIONS
 
-
+    public List<SaleInfo> getSalesInfoByCheckNumber(String checkNumber) {
+        return saleRepo.getSalesInfoByCheckNumber(checkNumber);
+    }
 
     //DEFAULT OPERATIONS
 

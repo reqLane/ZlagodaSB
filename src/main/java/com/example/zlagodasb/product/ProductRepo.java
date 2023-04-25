@@ -57,6 +57,44 @@ public class ProductRepo {
         return result;
     }
 
+    @Transactional(readOnly=true)
+    public List<Product> findAllSortedByProductName() {
+        String sql = "SELECT * FROM " + tableName +
+                " ORDER BY product_name";
+        List<Product> result = jdbcTemplate.query(sql, mapper);
+
+        for (Product product : result) {
+            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
+        }
+
+        return result;
+    }
+
+    @Transactional(readOnly=true)
+    public List<Product> findAllWithCategoryNumberSortedByName(Integer categoryNumber) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE category_number = ?" +
+                " ORDER BY product_name";
+        List<Product> result = jdbcTemplate.query(sql, mapper, categoryNumber);
+
+        for (Product product : result) {
+            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
+        }
+
+        return result;
+    }
+
+    @Transactional(readOnly=true)
+    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Date startDate, Date endDate) {
+        String sql = "SELECT SUM(COALESCE(Sale.product_number))" +
+                " FROM Product INNER JOIN Store_Product ON Product.id_product = Store_Product.id_product" +
+                " INNER JOIN Sale ON Store_Product.UPC = Sale.UPC" +
+                " INNER JOIN Checks ON Sale.check_number = Checks.check_number" +
+                " WHERE Product.id_product = ?" +
+                " AND Checks.print_date BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, idProduct, startDate, endDate);
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)

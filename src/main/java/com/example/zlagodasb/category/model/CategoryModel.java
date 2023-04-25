@@ -1,5 +1,6 @@
-package com.example.zlagodasb.category;
+package com.example.zlagodasb.category.model;
 
+import com.example.zlagodasb.category.Category;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,5 +1,6 @@
 package com.example.zlagodasb.store_product;
 
+import com.example.zlagodasb.store_product.model.StoreProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,6 +38,45 @@ public class StoreProductRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE id_product = ?";
         return jdbcTemplate.query(sql, mapper, idProduct);
+    }
+
+    @Transactional(readOnly=true)
+    public List<StoreProduct> findAllSortedByProductsNumber() {
+        String sql = "SELECT * FROM " + tableName +
+                " ORDER BY products_number";
+        return jdbcTemplate.query(sql, mapper);
+    }
+
+    @Transactional(readOnly=true)
+    public List<StoreProductInfo> getInfoByUPC(String UPC) {
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product" +
+                " ON Store_Product.id_product = Product.id_product";
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)
+    public List<StoreProductInfo> findAllPromotionalSortedBy(String sortBy) {
+        if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
+
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product" +
+                " ON Store_Product.id_product = Product.id_product" +
+                " WHERE Store_Product.promotional_product = TRUE" +
+                " ORDER BY " + sortBy;
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)//distinct
+    public List<StoreProductInfo> findAllNonPromotionalSortedBy(String sortBy) {
+        if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
+
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product" +
+                " ON Store_Product.id_product = Product.id_product" +
+                " WHERE Store_Product.promotional_product = FALSE" +
+                " ORDER BY " + sortBy;
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
 
     //DEFAULT OPERATIONS
@@ -123,6 +163,19 @@ public class StoreProductRepo {
             storeProduct.setExpirationDate(rs.getDate("expiration_date"));
             storeProduct.setPromotionalProduct(rs.getBoolean("promotional_product"));
             return storeProduct;
+        }
+    }
+
+    private static class StoreProductInfoRowMapper implements RowMapper<StoreProductInfo> {
+        @Override
+        public StoreProductInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            StoreProductInfo storeProductInfo = new StoreProductInfo();
+            storeProductInfo.setSellingPrice(rs.getBigDecimal("selling_price"));
+            storeProductInfo.setProductsNumber(rs.getInt("products_number"));
+            storeProductInfo.setProductName(rs.getString("product_name"));
+            storeProductInfo.setManufacturer(rs.getString("manufacturer"));
+            storeProductInfo.setCharacteristics(rs.getString("characteristics"));
+            return storeProductInfo;
         }
     }
 }

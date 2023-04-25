@@ -1,5 +1,6 @@
 package com.example.zlagodasb.customer_card;
 
+import com.example.zlagodasb.customer_card.model.CustomerCardModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,13 @@ public class CustomerCardService {
 
     //OPERATIONS
 
+    public List<CustomerCard> findAllCardsSortedBySurname() {
+        return customerCardRepo.findAllSortedByCustSurname();
+    }
 
+    public List<CustomerCard> findAllWithPercentSortedBySurname(Integer percent) {
+        return customerCardRepo.findAllWithPercentSortedBySurname(percent);
+    }
 
     //DEFAULT OPERATIONS
 

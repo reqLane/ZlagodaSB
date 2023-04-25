@@ -1,6 +1,7 @@
-package com.example.zlagodasb.check;
+package com.example.zlagodasb.check.model;
 
-import com.example.zlagodasb.sale.SaleModel;
+import com.example.zlagodasb.check.Check;
+import com.example.zlagodasb.sale.model.SaleModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

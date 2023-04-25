@@ -5,6 +5,7 @@ import com.example.zlagodasb.category.CategoryService;
 import com.example.zlagodasb.check.Check;
 import com.example.zlagodasb.check.CheckService;
 import com.example.zlagodasb.customer_card.CustomerCard;
+import com.example.zlagodasb.customer_card.model.CustomerCardModel;
 import com.example.zlagodasb.customer_card.CustomerCardService;
 import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
+import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
 
 @RestController
 @RequestMapping("/general")
@@ -42,6 +45,8 @@ public class MutualController {
         this.customerCardService = customerCardService;
         this.checkService = checkService;
     }
+
+    //INFORMATION LISTS
 
     @GetMapping("/getCategoryList")
     public ResponseEntity<List<String>> getCategoryList() {
@@ -122,9 +127,31 @@ public class MutualController {
         }
     }
 
+    //DATA OPERATIONS
+
+    @PostMapping("/createCustomerCard")
+    public ResponseEntity<Boolean> createCustomerCard(@RequestBody CustomerCardModel data) {
+        try {
+            if(isNullOrEmpty(data.getCustPatronymic())) data.setCustPatronymic(null);
+            if(isNullOrEmpty(data.getCity())) data.setCity(null);
+            if(isNullOrEmpty(data.getStreet())) data.setStreet(null);
+            if(isNullOrEmpty(data.getZipCode())) data.setZipCode(null);
+
+            CustomerCard saved = customerCardService.create(data);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+
     @PatchMapping("/updateCustomerCard")
     public ResponseEntity<Boolean> updateCustomerCard(@RequestBody Map<String, String> data) {
         try {
+            if(isNullOrEmpty(data.get("custPatronymic"))) data.put("custPatronymic", null);
+            if(isNullOrEmpty(data.get("city"))) data.put("city", null);
+            if(isNullOrEmpty(data.get("street"))) data.put("street", null);
+            if(isNullOrEmpty(data.get("zipCode"))) data.put("zipCode", null);
+
             CustomerCard toUpdate = new CustomerCard();
             toUpdate.setCardNumber(data.get("cardNumber"));
             toUpdate.setCustSurname(data.get("custSurname"));

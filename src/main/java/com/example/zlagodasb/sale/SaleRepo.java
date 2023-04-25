@@ -1,5 +1,6 @@
 package com.example.zlagodasb.sale;
 
+import com.example.zlagodasb.sale.model.SaleInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,6 +39,15 @@ public class SaleRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE check_number = ?";
         return jdbcTemplate.query(sql, mapper, checkNumber);
+    }
+
+    @Transactional(readOnly=true)
+    public List<SaleInfo> getSalesInfoByCheckNumber(String checkNumber) {
+        String sql = "SELECT Product.product_name, Sale.product_number, Sale.selling_price" +
+                " FROM Sale INNER JOIN Store_Product ON Sale.UPC = Store_Product.UPC" +
+                " INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
+                " WHERE Sale.check_number = ?";
+        return jdbcTemplate.query(sql, new SaleInfoRowMapper(), checkNumber);
     }
 
     //DEFAULT OPERATIONS
@@ -121,6 +131,17 @@ public class SaleRepo {
             sale.setProductNumber(rs.getInt("product_number"));
             sale.setSellingPrice(rs.getBigDecimal("selling_price"));
             return sale;
+        }
+    }
+
+    private static class SaleInfoRowMapper implements RowMapper<SaleInfo> {
+        @Override
+        public SaleInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            SaleInfo saleInfo = new SaleInfo();
+            saleInfo.setProductName(rs.getString("product_name"));
+            saleInfo.setProductNumber(rs.getInt("product_number"));
+            saleInfo.setSellingPrice(rs.getBigDecimal("selling_price"));
+            return saleInfo;
         }
     }
 }

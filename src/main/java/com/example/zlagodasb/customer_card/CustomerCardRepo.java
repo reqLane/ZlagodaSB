@@ -38,7 +38,30 @@ public class CustomerCardRepo {
 
     //OPERATIONS
 
+    @Transactional(readOnly=true)
+    public List<CustomerCard> findAllSortedByCustSurname() {
+        String sql = "SELECT * FROM " + tableName +
+                " ORDER BY cust_surname";
+        List<CustomerCard> result = jdbcTemplate.query(sql, mapper);
 
+        for (CustomerCard customerCard : result)
+            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
+
+        return result;
+    }
+
+    @Transactional(readOnly=true)
+    public List<CustomerCard> findAllWithPercentSortedBySurname(Integer percent) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE percent = ?" +
+                " ORDER BY cust_surname";
+        List<CustomerCard> result = jdbcTemplate.query(sql, mapper, percent);
+
+        for (CustomerCard customerCard : result)
+            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
+
+        return result;
+    }
 
     //DEFAULT OPERATIONS
 

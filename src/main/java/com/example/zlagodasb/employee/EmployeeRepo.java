@@ -38,12 +38,47 @@ public class EmployeeRepo {
 
     //OPERATIONS
 
+    @Transactional(readOnly=true)
+    public List<Employee> findAllSortedByEmplSurname() {
+        String sql = "SELECT * FROM " + tableName +
+                " ORDER BY empl_surname";
+        List<Employee> result = jdbcTemplate.query(sql, mapper);
 
+        for (Employee employee : result)
+            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
+
+        return result;
+    }
+
+    @Transactional(readOnly=true)
+    public List<Employee> findCashiersSortedByEmplSurname() {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE empl_role = 'Cashier'" +
+                " ORDER BY empl_surname";
+        List<Employee> result = jdbcTemplate.query(sql, mapper);
+
+        for (Employee employee : result)
+            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
+
+        return result;
+    }
+
+    @Transactional(readOnly=true)
+    public List<Employee> findAllWithEmplSurnameContains(String surname) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE empl_surname LIKE ?";
+        List<Employee> result = jdbcTemplate.query(sql, mapper, '%' + surname + '%');
+
+        for (Employee employee : result)
+            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
+
+        return result;
+    }
 
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)
-    public List<Employee> findAll(){
+    public List<Employee> findAll() {
         String sql = "SELECT * FROM " + tableName;
         List<Employee> result = jdbcTemplate.query(sql, mapper);
 
@@ -54,7 +89,7 @@ public class EmployeeRepo {
     }
 
     @Transactional(readOnly=true)
-    public Employee findById(String idEmployee){
+    public Employee findById(String idEmployee) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE id_employee = ?";
         List<Employee> list = jdbcTemplate.query(sql, mapper, idEmployee);
@@ -66,10 +101,13 @@ public class EmployeeRepo {
     }
 
     @Transactional
-    public Employee create(final Employee employee){
+    public Employee create(final Employee employee) {
         final String sql = "INSERT INTO " + tableName +
                 "(id_employee, password, empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)" +
                 " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        if(!employee.getEmplRole().equals("Manager") && !employee.getEmplRole().equals("Cashier"))
+            employee.setEmplRole("Cashier");
 
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -115,14 +153,14 @@ public class EmployeeRepo {
     }
 
     @Transactional
-    public void deleteById(String idEmployee){
+    public void deleteById(String idEmployee) {
         String sql = "DELETE FROM " + tableName +
                 " WHERE id_employee = ?";
         jdbcTemplate.update(sql, idEmployee);
     }
 
     @Transactional
-    public void delete(@NonNull Collection<Employee> list){
+    public void delete(@NonNull Collection<Employee> list) {
         for(Employee entity: list)
             deleteById(entity.getIdEmployee());
     }

@@ -1,9 +1,11 @@
 package com.example.zlagodasb.product;
 
+import com.example.zlagodasb.product.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +22,20 @@ public class ProductService {
 
     public Product findByProductName(String productName) {
         return productRepo.findByProductName(productName);
+    }
+
+    public List<Product> findAllSortedByName() {
+        return productRepo.findAllSortedByProductName();
+    }
+
+    public List<Product> findAllWithCategorySortedByName(Integer categoryNumber) {
+        return productRepo.findAllWithCategoryNumberSortedByName(categoryNumber);
+    }
+
+    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Date startDate, Date endDate) {
+        Long result = productRepo.getTotalAmountOfProductSoldInPeriod(idProduct, startDate, endDate);
+
+        return result != null ? result : (long)0;
     }
 
     //DEFAULT OPERATIONS

@@ -1,5 +1,7 @@
 package com.example.zlagodasb.store_product;
 
+import com.example.zlagodasb.store_product.model.StoreProductInfo;
+import com.example.zlagodasb.store_product.model.StoreProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,21 @@ public class StoreProductService {
 
     //OPERATIONS
 
+    public List<StoreProduct> findAllSortedByAmount() {
+        return storeProductRepo.findAllSortedByProductsNumber();
+    }
 
+    public List<StoreProductInfo> getInfoByUPC(String UPC) {
+        return storeProductRepo.getInfoByUPC(UPC);
+    }
+
+    public List<StoreProductInfo> findAllPromotionalSortedBy(String sortBy) {
+        return storeProductRepo.findAllPromotionalSortedBy(sortBy);
+    }
+
+    public List<StoreProductInfo> findAllNonPromotionalSortedBy(String sortBy) {
+        return storeProductRepo.findAllNonPromotionalSortedBy(sortBy);
+    }
 
     //DEFAULT OPERATIONS
 

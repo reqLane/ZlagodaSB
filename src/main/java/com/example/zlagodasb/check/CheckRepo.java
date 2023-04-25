@@ -1,5 +1,6 @@
 package com.example.zlagodasb.check;
 
+import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.sale.SaleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
@@ -50,6 +52,38 @@ public class CheckRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE card_number = ?";
         return jdbcTemplate.query(sql, mapper, cardNumber);
+    }
+
+    @Transactional(readOnly=true)//distinct
+    public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE id_employee = ?" +
+                " AND print_date BETWEEN ? AND ?";
+        return jdbcTemplate.query(sql, new CheckInfoRowMapper(), idCashier, startDate, endDate);
+    }
+
+    @Transactional(readOnly=true)//distinct
+    public List<CheckInfo> getAllChecksInfoInPeriod(Date startDate, Date endDate) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE print_date BETWEEN ? AND ?";
+        return jdbcTemplate.query(sql, new CheckInfoRowMapper(), startDate, endDate);
+    }
+
+    @Transactional(readOnly=true)
+    public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+        String sql = "SELECT SUM(COALESCE(sum_total))" +
+                " FROM " + tableName +
+                " WHERE id_employee = ?" +
+                " AND print_date BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, idCashier, startDate, endDate);
+    }
+
+    @Transactional(readOnly=true)
+    public BigDecimal getTotalIncomeFromChecksInPeriod(Date startDate, Date endDate) {
+        String sql = "SELECT SUM(COALESCE(sum_total))" +
+                " FROM " + tableName +
+                " WHERE print_date BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, startDate, endDate);
     }
 
     //DEFAULT OPERATIONS
@@ -143,6 +177,20 @@ public class CheckRepo {
             check.setSumTotal(rs.getBigDecimal("sum_total"));
             check.setVat(rs.getBigDecimal("vat"));
             return check;
+        }
+    }
+
+    private static class CheckInfoRowMapper implements RowMapper<CheckInfo> {
+        @Override
+        public CheckInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CheckInfo checkInfo = new CheckInfo();
+            checkInfo.setCheckNumber(rs.getString("check_number"));
+            checkInfo.setIdEmployee(rs.getString("id_employee"));
+            checkInfo.setCardNumber(rs.getString("card_number"));
+            checkInfo.setPrintDate(rs.getDate("print_date"));
+            checkInfo.setSumTotal(rs.getBigDecimal("sum_total"));
+            checkInfo.setVat(rs.getBigDecimal("vat"));
+            return checkInfo;
         }
     }
 }

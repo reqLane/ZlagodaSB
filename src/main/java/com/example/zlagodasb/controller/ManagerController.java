@@ -1,25 +1,22 @@
 package com.example.zlagodasb.controller;
 
 import com.example.zlagodasb.category.Category;
-import com.example.zlagodasb.category.CategoryModel;
+import com.example.zlagodasb.category.model.CategoryModel;
 import com.example.zlagodasb.category.CategoryService;
-import com.example.zlagodasb.check.Check;
-import com.example.zlagodasb.check.CheckModel;
 import com.example.zlagodasb.check.CheckService;
+import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.customer_card.CustomerCard;
-import com.example.zlagodasb.customer_card.CustomerCardModel;
 import com.example.zlagodasb.customer_card.CustomerCardService;
 import com.example.zlagodasb.employee.Employee;
-import com.example.zlagodasb.employee.EmployeeModel;
+import com.example.zlagodasb.employee.model.EmployeeModel;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
-import com.example.zlagodasb.product.ProductModel;
+import com.example.zlagodasb.product.model.ProductModel;
 import com.example.zlagodasb.product.ProductService;
-import com.example.zlagodasb.sale.Sale;
-import com.example.zlagodasb.sale.SaleModel;
 import com.example.zlagodasb.sale.SaleService;
 import com.example.zlagodasb.store_product.StoreProduct;
-import com.example.zlagodasb.store_product.StoreProductModel;
+import com.example.zlagodasb.store_product.model.StoreProductInfo;
+import com.example.zlagodasb.store_product.model.StoreProductModel;
 import com.example.zlagodasb.store_product.StoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
 
 @RestController
 @RequestMapping("/manager")
@@ -38,6 +39,7 @@ public class ManagerController {
     private final EmployeeService employeeService;
     private final CustomerCardService customerCardService;
     private final CheckService checkService;
+    private final SaleService saleService;
 
     @Autowired
     public ManagerController(CategoryService categoryService,
@@ -45,14 +47,18 @@ public class ManagerController {
                              StoreProductService storeProductService,
                              EmployeeService employeeService,
                              CustomerCardService customerCardService,
-                             CheckService checkService) {
+                             CheckService checkService,
+                             SaleService saleService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.storeProductService = storeProductService;
         this.employeeService = employeeService;
         this.customerCardService = customerCardService;
         this.checkService = checkService;
+        this.saleService = saleService;
     }
+
+    //DATA OPERATIONS
 
     @PostMapping("/createCategory")
     public ResponseEntity<Boolean> createCategory(@RequestBody CategoryModel data) {
@@ -96,16 +102,9 @@ public class ManagerController {
     @PostMapping("/createEmployee")
     public ResponseEntity<Boolean> createEmployee(@RequestBody EmployeeModel data) {
         try {
+            if(isNullOrEmpty(data.getEmplPatronymic())) data.setEmplPatronymic(null);
+
             Employee saved = employeeService.create(data);
-            return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            return ResponseEntity.ok(false);
-        }
-    }
-    @PostMapping("/createCustomerCard")
-    public ResponseEntity<Boolean> createCustomerCard(@RequestBody CustomerCardModel data) {
-        try {
-            CustomerCard saved = customerCardService.create(data);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
@@ -158,6 +157,8 @@ public class ManagerController {
     @PatchMapping("/updateEmployee")
     public ResponseEntity<Boolean> updateEmployee(@RequestBody EmployeeModel data) {
         try {
+            if(isNullOrEmpty(data.getEmplPatronymic())) data.setEmplPatronymic(null);
+
             employeeService.update(data);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
@@ -217,6 +218,267 @@ public class ManagerController {
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
+        }
+    }
+
+    //FUNCTIONAL OPERATIONS
+
+    @GetMapping("/getCategoryReport")
+    public ResponseEntity<List<Category>> getCategoryReport() {
+        try {
+            List<Category> result = categoryService.findAll();
+            for (Category category : result)
+                category.setProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+    @GetMapping("/getProductReport")
+    public ResponseEntity<List<Product>> getProductReport() {
+        try {
+            List<Product> result = productService.findAll();
+            for (Product product : result)
+                product.setStoreProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+    @GetMapping("/getStoreProductReport")
+    public ResponseEntity<List<StoreProduct>> getStoreProductReport() {
+        try {
+            List<StoreProduct> result = storeProductService.findAll();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+    @GetMapping("/getEmployeeReport")
+    public ResponseEntity<List<Employee>> getEmployeeReport() {
+        try {
+            List<Employee> result = employeeService.findAll();
+            for (Employee employee : result)
+                employee.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+    @GetMapping("/getCustomerCardReport")
+    public ResponseEntity<List<CustomerCard>> getCustomerCardReport() {
+        try {
+            List<CustomerCard> result = customerCardService.findAll();
+            for (CustomerCard customerCard : result)
+                customerCard.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getEmployeesSortedBySurname")
+    public ResponseEntity<List<Employee>> getEmployeesSortedBySurname() {
+        try {
+            List<Employee> result = employeeService.findAllSortedByEmplSurname();
+            for (Employee employee : result)
+                employee.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCashiersSortedBySurname")
+    public ResponseEntity<List<Employee>> getCashiersSortedBySurname() {
+        try {
+            List<Employee> result = employeeService.findCashiersSortedByEmplSurname();
+            for (Employee employee : result)
+                employee.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCustomersSortedBySurname")
+    public ResponseEntity<List<CustomerCard>> getCustomersSortedBySurname() {
+        try {
+            List<CustomerCard> result = customerCardService.findAllCardsSortedBySurname();
+            for (CustomerCard customerCard : result)
+                customerCard.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCategoriesSortedByName")
+    public ResponseEntity<List<Category>> getCategoriesSortedByName() {
+        try {
+            List<Category> result = categoryService.findAllSortedByName();
+            for (Category category : result)
+                category.setProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getProductsSortedByName")
+    public ResponseEntity<List<Product>> getProductsSortedByName() {
+        try {
+            List<Product> result = productService.findAllSortedByName();
+            for (Product product : result)
+                product.setStoreProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getStoreProductsSortedByAmount")
+    public ResponseEntity<List<StoreProduct>> getStoreProductsSortedByNumber() {
+        try {
+            List<StoreProduct> result = storeProductService.findAllSortedByAmount();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getEmployeesBySurname")
+    public ResponseEntity<List<Employee>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
+        try {
+            List<Employee> result = employeeService.findAllBySurname(data.get("surname"));
+            for (Employee employee : result)
+                employee.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCustomersWithPercentSortedBySurname")
+    public ResponseEntity<List<CustomerCard>> getCustomersWithPercentSortedBySurname(@RequestBody Map<String, String> data) {
+        try {
+            List<CustomerCard> result = customerCardService.findAllWithPercentSortedBySurname(Integer.parseInt(data.get("percent")));
+            for (CustomerCard customerCard : result)
+                customerCard.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getProductsWithCategoryNameSortedByName")
+    public ResponseEntity<List<Product>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
+        try {
+            List<Product> result = productService.findAllWithCategorySortedByName(categoryService.findByCategoryName(data.get("categoryName")).getCategoryNumber());
+            for (Product product : result)
+                product.setStoreProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getStoreProductInfoByUPC")
+    public ResponseEntity<List<StoreProductInfo>> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
+        try {
+            List<StoreProductInfo> result = storeProductService.getInfoByUPC(data.get("UPC"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getPromotionalProductsSorted")
+    public ResponseEntity<List<StoreProductInfo>> getPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+        try {
+            List<StoreProductInfo> result = storeProductService.findAllPromotionalSortedBy(data.get("sortBy"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getNonPromotionalProductsSorted")
+    public ResponseEntity<List<StoreProductInfo>> getNonPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+        try {
+            List<StoreProductInfo> result = storeProductService.findAllNonPromotionalSortedBy(data.get("sortBy"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getChecksInfoOfCashierInPeriod")
+    public ResponseEntity<List<CheckInfo>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
+        try {
+            String idCashier = data.get("idCashier");
+            Date startDate = Date.valueOf(data.get("startDate"));
+            Date endDate = Date.valueOf(data.get("endDate"));
+            List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
+            for (CheckInfo checkInfo : result) {
+                checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getAllChecksInfoInPeriod")
+    public ResponseEntity<List<CheckInfo>> getAllChecksInfoInPeriod(@RequestBody Map<String, String> data) {
+        try {
+            Date startDate = Date.valueOf(data.get("startDate"));
+            Date endDate = Date.valueOf(data.get("endDate"));
+            List<CheckInfo> result = checkService.getAllChecksInfoInPeriod(startDate, endDate);
+            for (CheckInfo checkInfo : result) {
+                checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getTotalIncomeFromChecksOfCashierInPeriod")
+    public ResponseEntity<BigDecimal> getTotalIncomeFromChecksOfCashierInPeriod(@RequestBody Map<String, String> data) {
+        try {
+            String idCashier = data.get("idCashier");
+            Date startDate = Date.valueOf(data.get("startDate"));
+            Date endDate = Date.valueOf(data.get("endDate"));
+            BigDecimal result = checkService.getTotalIncomeFromChecksOfCashierInPeriod(idCashier, startDate, endDate);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(BigDecimal.valueOf(-1));
+        }
+    }
+
+    @GetMapping("/getTotalIncomeFromChecksInPeriod")
+    public ResponseEntity<BigDecimal> getTotalIncomeFromChecksInPeriod(@RequestBody Map<String, String> data) {
+        try {
+            Date startDate = Date.valueOf(data.get("startDate"));
+            Date endDate = Date.valueOf(data.get("endDate"));
+            BigDecimal result = checkService.getTotalIncomeFromChecksInPeriod(startDate, endDate);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(BigDecimal.valueOf(-1));
+        }
+    }
+
+    @GetMapping("/getTotalAmountOfProductSoldInPeriod")
+    public ResponseEntity<Long> getTotalAmountOfProductSoldInPeriod(@RequestBody Map<String, String> data) {
+        try {
+            String productName = data.get("productName");
+            Date startDate = Date.valueOf(data.get("startDate"));
+            Date endDate = Date.valueOf(data.get("endDate"));
+            Long result = productService.getTotalAmountOfProductSoldInPeriod(productService.findByProductName(productName).getIdProduct(), startDate, endDate);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok((long)-1);
         }
     }
 }

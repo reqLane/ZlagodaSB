@@ -1,5 +1,6 @@
 package com.example.zlagodasb.category;
 
+import com.example.zlagodasb.category.model.CategoryModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class CategoryService {
 
     public Category findByCategoryName(String categoryName) {
         return categoryRepo.findByCategoryName(categoryName);
+    }
+
+    public List<Category> findAllSortedByName() {
+        return categoryRepo.findAllSortedByCategoryName();
     }
 
     //DEFAULT OPERATIONS

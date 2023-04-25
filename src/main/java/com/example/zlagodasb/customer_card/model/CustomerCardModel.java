@@ -1,5 +1,6 @@
-package com.example.zlagodasb.customer_card;
+package com.example.zlagodasb.customer_card.model;
 
+import com.example.zlagodasb.customer_card.CustomerCard;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

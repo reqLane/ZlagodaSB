@@ -1,5 +1,6 @@
 package com.example.zlagodasb.employee;
 
+import com.example.zlagodasb.employee.model.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,17 @@ public class EmployeeService {
 
     //OPERATIONS
 
+    public List<Employee> findAllSortedByEmplSurname() {
+        return employeeRepo.findAllSortedByEmplSurname();
+    }
 
+    public List<Employee> findCashiersSortedByEmplSurname() {
+        return employeeRepo.findCashiersSortedByEmplSurname();
+    }
+
+    public List<Employee> findAllBySurname(String surname) {
+        return employeeRepo.findAllWithEmplSurnameContains(surname);
+    }
 
     //DEFAULT OPERATIONS
 

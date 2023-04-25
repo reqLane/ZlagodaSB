@@ -1,5 +1,6 @@
-package com.example.zlagodasb.employee;
+package com.example.zlagodasb.employee.model;
 
+import com.example.zlagodasb.employee.Employee;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

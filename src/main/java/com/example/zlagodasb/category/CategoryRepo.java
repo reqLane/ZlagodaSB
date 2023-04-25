@@ -50,6 +50,18 @@ public class CategoryRepo {
         return result;
     }
 
+    @Transactional(readOnly=true)
+    public List<Category> findAllSortedByCategoryName() {
+        String sql = "SELECT * FROM " + tableName +
+                " ORDER BY category_name";
+        List<Category> result = jdbcTemplate.query(sql, mapper);
+
+        for (Category category : result)
+            category.setProducts(productRepo.findByCategoryNumber(category.getCategoryNumber()));
+
+        return result;
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)
