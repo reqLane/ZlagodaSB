@@ -120,12 +120,12 @@ public class CheckRepo {
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(0, check.getCheckNumber());
-            ps.setString(1, check.getIdEmployee());
-            ps.setString(2, check.getCardNumber());
-            ps.setDate(3, check.getPrintDate());
-            ps.setBigDecimal(4, check.getSumTotal());
-            ps.setBigDecimal(5, check.getVat());
+            ps.setString(1, check.getCheckNumber());
+            ps.setString(2, check.getIdEmployee());
+            ps.setString(3, check.getCardNumber());
+            ps.setDate(4, check.getPrintDate());
+            ps.setBigDecimal(5, check.getSumTotal());
+            ps.setBigDecimal(6, check.getVat());
             return ps;
         }, holder);
 

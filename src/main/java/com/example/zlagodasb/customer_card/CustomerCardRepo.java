@@ -97,15 +97,15 @@ public class CustomerCardRepo {
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(0, customerCard.getCardNumber());
-            ps.setString(1, customerCard.getCustSurname());
-            ps.setString(2, customerCard.getCustName());
-            ps.setString(3, customerCard.getCustPatronymic());
-            ps.setString(4, customerCard.getPhoneNumber());
-            ps.setString(5, customerCard.getCity());
-            ps.setString(6, customerCard.getStreet());
-            ps.setString(7, customerCard.getZipCode());
-            ps.setInt(8, customerCard.getPercent());
+            ps.setString(1, customerCard.getCardNumber());
+            ps.setString(2, customerCard.getCustSurname());
+            ps.setString(3, customerCard.getCustName());
+            ps.setString(4, customerCard.getCustPatronymic());
+            ps.setString(5, customerCard.getPhoneNumber());
+            ps.setString(6, customerCard.getCity());
+            ps.setString(7, customerCard.getStreet());
+            ps.setString(8, customerCard.getZipCode());
+            ps.setInt(9, customerCard.getPercent());
             return ps;
         }, holder);
 

@@ -72,8 +72,11 @@ public class ManagerController {
     @PostMapping("/createProduct")
     public ResponseEntity<Boolean> createProduct(@RequestBody Map<String, String> data) {
         try {
+            Category category = categoryService.findByCategoryName(data.get("categoryName"));
+            if(category == null) throw new Exception("Category with name not found");
+
             ProductModel productModel = new ProductModel();
-            productModel.setCategoryNumber(categoryService.findByCategoryName(data.get("categoryName")).getCategoryNumber());
+            productModel.setCategoryNumber(category.getCategoryNumber());
             productModel.setProductName(data.get("productName"));
             productModel.setManufacturer(data.get("manufacturer"));
             productModel.setCharacteristics(data.get("characteristics"));
@@ -86,9 +89,12 @@ public class ManagerController {
     @PostMapping("/createStoreProduct")
     public ResponseEntity<Boolean> createStoreProduct(@RequestBody Map<String, String> data) {
         try {
+            Product product = productService.findByProductName(data.get("productName"));
+            if(product == null) throw new Exception("Product with name not found");
+
             StoreProductModel storeProductModel = new StoreProductModel();
             storeProductModel.setUPC(data.get("UPC"));
-            storeProductModel.setIdProduct(productService.findByProductName(data.get("productName")).getIdProduct());
+            storeProductModel.setIdProduct(product.getIdProduct());
             storeProductModel.setSellingPrice(BigDecimal.valueOf(Double.parseDouble(data.get("sellingPrice"))));
             storeProductModel.setProductsNumber(Integer.parseInt(data.get("productsNumber")));
             storeProductModel.setExpirationDate(Date.valueOf(data.get("expirationDate"))); //yyyy-[m]m-[d]d (2023-04-24)
@@ -114,8 +120,11 @@ public class ManagerController {
     @PatchMapping ("/updateCategory")
     public ResponseEntity<Boolean> updateCategory(@RequestBody Map<String, String> data) {
         try {
+            Category category = categoryService.findByCategoryName(data.get("currentName"));
+            if(category == null) throw new Exception("Category with name not found");
+
             Category toUpdate = new Category();
-            toUpdate.setCategoryNumber(categoryService.findByCategoryName(data.get("currentName")).getCategoryNumber());
+            toUpdate.setCategoryNumber(category.getCategoryNumber());
             toUpdate.setCategoryName(data.get("newName"));
             categoryService.update(toUpdate);
             return ResponseEntity.ok(true);
@@ -126,9 +135,14 @@ public class ManagerController {
     @PatchMapping ("/updateProduct")
     public ResponseEntity<Boolean> updateProduct(@RequestBody Map<String, String> data) {
         try {
+            Product product = productService.findByProductName(data.get("currentName"));
+            Category category = categoryService.findByCategoryName(data.get("categoryName"));
+            if(product == null) throw new Exception("Product with name not found");
+            if(category == null) throw new Exception("Category with name not found");
+
             Product toUpdate = new Product();
-            toUpdate.setIdProduct(productService.findByProductName(data.get("currentName")).getIdProduct());
-            toUpdate.setCategoryNumber(categoryService.findByCategoryName(data.get("categoryName")).getCategoryNumber());
+            toUpdate.setIdProduct(product.getIdProduct());
+            toUpdate.setCategoryNumber(category.getCategoryNumber());
             toUpdate.setProductName(data.get("newName"));
             toUpdate.setManufacturer(data.get("manufacturer"));
             toUpdate.setCharacteristics(data.get("characteristics"));
@@ -141,9 +155,12 @@ public class ManagerController {
     @PatchMapping("/updateStoreProduct")
     public ResponseEntity<Boolean> updateStoreProduct(@RequestBody Map<String, String> data) {
         try {
+            Product product = productService.findByProductName(data.get("productName"));
+            if(product == null) throw new Exception("Product with name not found");
+
             StoreProduct toUpdate = new StoreProduct();
             toUpdate.setUPC(data.get("UPC"));
-            toUpdate.setIdProduct(productService.findByProductName(data.get("productName")).getIdProduct());
+            toUpdate.setIdProduct(product.getIdProduct());
             toUpdate.setSellingPrice(BigDecimal.valueOf(Double.parseDouble(data.get("sellingPrice"))));
             toUpdate.setProductsNumber(Integer.parseInt(data.get("productsNumber")));
             toUpdate.setExpirationDate(Date.valueOf(data.get("expirationDate"))); //yyyy-mm-dd (2023-04-24)
@@ -169,7 +186,10 @@ public class ManagerController {
     @DeleteMapping("/deleteCategory")
     public ResponseEntity<Boolean> deleteCategory(@RequestBody Map<String, String> data) {
         try {
-            categoryService.deleteById(categoryService.findByCategoryName(data.get("categoryName")).getCategoryNumber());
+            Category category = categoryService.findByCategoryName(data.get("categoryName"));
+            if(category == null) throw new Exception("Category with name not found");
+
+            categoryService.deleteById(category.getCategoryNumber());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
@@ -178,7 +198,10 @@ public class ManagerController {
     @DeleteMapping("/deleteProduct")
     public ResponseEntity<Boolean> deleteProduct(@RequestBody Map<String, String> data) {
         try {
-            productService.deleteById(productService.findByProductName(data.get("productName")).getIdProduct());
+            Product product = productService.findByProductName(data.get("productName"));
+            if(product == null) throw new Exception("Product with name not found");
+
+            productService.deleteById(product.getIdProduct());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
@@ -374,7 +397,10 @@ public class ManagerController {
     @GetMapping("/getProductsWithCategoryNameSortedByName")
     public ResponseEntity<List<Product>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
         try {
-            List<Product> result = productService.findAllWithCategorySortedByName(categoryService.findByCategoryName(data.get("categoryName")).getCategoryNumber());
+            Category category = categoryService.findByCategoryName(data.get("categoryName"));
+            if(category == null) throw new Exception("Category with name not found");
+
+            List<Product> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
             for (Product product : result)
                 product.setStoreProducts(null);
             return ResponseEntity.ok(result);
@@ -475,7 +501,11 @@ public class ManagerController {
             String productName = data.get("productName");
             Date startDate = Date.valueOf(data.get("startDate"));
             Date endDate = Date.valueOf(data.get("endDate"));
-            Long result = productService.getTotalAmountOfProductSoldInPeriod(productService.findByProductName(productName).getIdProduct(), startDate, endDate);
+
+            Product product = productService.findByProductName(productName);
+            if(product == null) throw new Exception("Product with name not found");
+
+            Long result = productService.getTotalAmountOfProductSoldInPeriod(product.getIdProduct(), startDate, endDate);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok((long)-1);

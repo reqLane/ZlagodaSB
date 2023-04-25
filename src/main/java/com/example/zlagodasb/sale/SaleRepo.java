@@ -78,10 +78,10 @@ public class SaleRepo {
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(0, sale.getUPC());
-            ps.setString(1, sale.getCheckNumber());
-            ps.setInt(2, sale.getProductNumber());
-            ps.setBigDecimal(3, sale.getSellingPrice());
+            ps.setString(1, sale.getUPC());
+            ps.setString(2, sale.getCheckNumber());
+            ps.setInt(3, sale.getProductNumber());
+            ps.setBigDecimal(4, sale.getSellingPrice());
             return ps;
         }, holder);
 

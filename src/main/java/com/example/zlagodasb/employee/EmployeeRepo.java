@@ -112,19 +112,19 @@ public class EmployeeRepo {
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(0, employee.getIdEmployee());
-            ps.setString(1, employee.getPassword());
-            ps.setString(2, employee.getEmplSurname());
-            ps.setString(3, employee.getEmplName());
-            ps.setString(4, employee.getEmplPatronymic());
-            ps.setString(5, employee.getEmplRole());
-            ps.setBigDecimal(6, employee.getSalary());
-            ps.setDate(7, employee.getDateOfBirth());
-            ps.setDate(8, employee.getDateOfStart());
-            ps.setString(9, employee.getPhoneNumber());
-            ps.setString(10, employee.getCity());
-            ps.setString(11, employee.getStreet());
-            ps.setString(12, employee.getZipCode());
+            ps.setString(1, employee.getIdEmployee());
+            ps.setString(2, employee.getPassword());
+            ps.setString(3, employee.getEmplSurname());
+            ps.setString(4, employee.getEmplName());
+            ps.setString(5, employee.getEmplPatronymic());
+            ps.setString(6, employee.getEmplRole());
+            ps.setBigDecimal(7, employee.getSalary());
+            ps.setDate(8, employee.getDateOfBirth());
+            ps.setDate(9, employee.getDateOfStart());
+            ps.setString(10, employee.getPhoneNumber());
+            ps.setString(11, employee.getCity());
+            ps.setString(12, employee.getStreet());
+            ps.setString(13, employee.getZipCode());
             return ps;
         }, holder);
 

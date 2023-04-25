@@ -106,12 +106,12 @@ public class StoreProductRepo {
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(0, storeProduct.getUPC());
-            ps.setInt(1, storeProduct.getIdProduct());
-            ps.setBigDecimal(2, storeProduct.getSellingPrice());
-            ps.setInt(3, storeProduct.getProductsNumber());
-            ps.setDate(4, storeProduct.getExpirationDate());
-            ps.setBoolean(5, storeProduct.isPromotionalProduct());
+            ps.setString(1, storeProduct.getUPC());
+            ps.setInt(2, storeProduct.getIdProduct());
+            ps.setBigDecimal(3, storeProduct.getSellingPrice());
+            ps.setInt(4, storeProduct.getProductsNumber());
+            ps.setDate(5, storeProduct.getExpirationDate());
+            ps.setBoolean(6, storeProduct.isPromotionalProduct());
             return ps;
         }, holder);
 
