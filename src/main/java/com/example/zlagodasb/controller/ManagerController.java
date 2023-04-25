@@ -3,6 +3,7 @@ package com.example.zlagodasb.controller;
 import com.example.zlagodasb.category.Category;
 import com.example.zlagodasb.category.model.CategoryModel;
 import com.example.zlagodasb.category.CategoryService;
+import com.example.zlagodasb.check.Check;
 import com.example.zlagodasb.check.CheckService;
 import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.customer_card.CustomerCard;
@@ -182,7 +183,7 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping("/deleteCategory")
+    @PutMapping("/deleteCategory")
     public ResponseEntity<Boolean> deleteCategory(@RequestBody Map<String, String> data) {
         try {
             Category category = categoryService.findByCategoryName(data.get("categoryName"));
@@ -194,7 +195,7 @@ public class ManagerController {
             return ResponseEntity.ok(false);
         }
     }
-    @DeleteMapping("/deleteProduct")
+    @PutMapping("/deleteProduct")
     public ResponseEntity<Boolean> deleteProduct(@RequestBody Map<String, String> data) {
         try {
             Product product = productService.findByProductName(data.get("productName"));
@@ -206,37 +207,49 @@ public class ManagerController {
             return ResponseEntity.ok(false);
         }
     }
-    @DeleteMapping("/deleteStoreProduct")
+    @PutMapping("/deleteStoreProduct")
     public ResponseEntity<Boolean> deleteStoreProduct(@RequestBody Map<String, String> data) {
         try {
-            storeProductService.deleteById(data.get("UPC"));
+            StoreProduct storeProduct = storeProductService.findById(data.get("UPC"));
+            if(storeProduct == null) throw new Exception("StoreProduct with UPC not found");
+
+            storeProductService.deleteById(storeProduct.getUPC());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
         }
     }
-    @DeleteMapping("/deleteEmployee")
+    @PutMapping("/deleteEmployee")
     public ResponseEntity<Boolean> deleteEmployee(@RequestBody Map<String, String> data) {
         try {
-            employeeService.deleteById(data.get("idEmployee"));
+            Employee employee = employeeService.findById(data.get("idEmployee"));
+            if(employee == null) throw new Exception("Employee with idEmployee not found");
+
+            employeeService.deleteById(employee.getIdEmployee());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
         }
     }
-    @DeleteMapping("/deleteCustomerCard")
+    @PutMapping("/deleteCustomerCard")
     public ResponseEntity<Boolean> deleteCustomerCard(@RequestBody Map<String, String> data) {
         try {
-            customerCardService.deleteById(data.get("cardNumber"));
+            CustomerCard customerCard = customerCardService.findById(data.get("cardNumber"));
+            if(customerCard == null) throw new Exception("CustomerCard with cardNumber not found");
+
+            customerCardService.deleteById(customerCard.getCardNumber());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
         }
     }
-    @DeleteMapping("/deleteCheck")
+    @PutMapping("/deleteCheck")
     public ResponseEntity<Boolean> deleteCheck(@RequestBody Map<String, String> data) {
         try {
-            checkService.deleteById(data.get("checkNumber"));
+            Check check = checkService.findById(data.get("checkNumber"));
+            if(check == null) throw new Exception("Check with checkNumber not found");
+
+            checkService.deleteById(check.getCheckNumber());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
