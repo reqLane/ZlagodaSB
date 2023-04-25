@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -15,7 +14,6 @@ import java.util.List;
 public class CheckModel {
     private String idEmployee;
     private String cardNumber;
-    private Date printDate;
 
     private List<SaleModel> saleModels;
 
@@ -23,7 +21,6 @@ public class CheckModel {
         Check entity = new Check();
         entity.setIdEmployee(idEmployee);
         entity.setCardNumber(cardNumber);
-        entity.setPrintDate(printDate);
         return entity;
     }
 }

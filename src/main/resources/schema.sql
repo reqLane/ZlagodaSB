@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS Customer_Card(
     city VARCHAR(50) NULL,
     street VARCHAR(50) NULL,
     zip_code VARCHAR(9) NULL,
-    percent INT NOT NULL CHECK (percent >= 0),
+    percent INT NOT NULL CHECK (percent >= 0 AND percent <= 80),
     PRIMARY KEY(card_number)
 );
 

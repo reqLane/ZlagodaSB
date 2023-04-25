@@ -11,8 +11,6 @@ import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
 import com.example.zlagodasb.product.ProductService;
-import com.example.zlagodasb.sale.Sale;
-import com.example.zlagodasb.sale.model.SaleModel;
 import com.example.zlagodasb.sale.SaleService;
 import com.example.zlagodasb.store_product.StoreProductService;
 import com.example.zlagodasb.store_product.model.StoreProductInfo;
@@ -64,11 +62,6 @@ public class CashierController {
             if(isNullOrEmpty(data.getCardNumber())) data.setCardNumber(null);
 
             Check saved = checkService.create(data);
-            for (SaleModel saleModel : data.getSaleModels()) {
-                Sale entity = saleModel.toEntity();
-                entity.setCheckNumber(saved.getCheckNumber());
-                entity = saleService.create(entity);
-            }
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);

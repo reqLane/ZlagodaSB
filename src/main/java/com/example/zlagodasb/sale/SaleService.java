@@ -1,6 +1,8 @@
 package com.example.zlagodasb.sale;
 
 import com.example.zlagodasb.sale.model.SaleInfo;
+import com.example.zlagodasb.store_product.StoreProduct;
+import com.example.zlagodasb.store_product.StoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,13 @@ import java.util.List;
 @Service
 public class SaleService {
     private final SaleRepo saleRepo;
+    private final StoreProductService storeProductService;
 
     @Autowired
-    public SaleService(SaleRepo saleRepo) {
+    public SaleService(SaleRepo saleRepo,
+                       StoreProductService storeProductService) {
         this.saleRepo = saleRepo;
+        this.storeProductService = storeProductService;
     }
 
     //OPERATIONS
@@ -33,7 +38,24 @@ public class SaleService {
         return saleRepo.findById(UPC, checkNumber);
     }
 
-    public Sale create(Sale sale) {
+    public Sale create(Sale sale) throws Exception {
+        StoreProduct storeProduct = storeProductService.findById(sale.getUPC());
+        if(storeProduct == null)
+            throw new Exception("StoreProduct with UPC not found");
+
+        Integer storedNumber = storeProduct.getProductsNumber();
+        Integer expectedNumber = sale.getProductNumber();
+        int resultStoredNumber = storedNumber - expectedNumber;
+
+        if(resultStoredNumber < 0)
+            throw new Exception("StoreProduct amount is less than expected");
+        else {
+            storeProduct.setProductsNumber(resultStoredNumber);
+            storeProductService.update(storeProduct);
+        }
+
+        sale.setSellingPrice(storeProduct.getSellingPrice());
+
         return saleRepo.create(sale);
     }
 

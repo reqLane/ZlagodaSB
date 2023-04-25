@@ -13,13 +13,11 @@ import java.math.BigDecimal;
 public class SaleModel {
     private String UPC;
     private Integer productNumber;
-    private BigDecimal sellingPrice;
 
     public Sale toEntity() {
         Sale entity = new Sale();
         entity.setUPC(UPC);
         entity.setProductNumber(productNumber);
-        entity.setSellingPrice(sellingPrice);
         return entity;
     }
 }
