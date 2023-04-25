@@ -91,7 +91,7 @@ public class CashierController {
 
     //getCustomersSortedBySurname mutual
 
-    @GetMapping("/getProductsByName")
+    @PostMapping("/getProductsByName")
     public ResponseEntity<List<Product>> getProductsByName(@RequestBody Map<String, String> data) {
         try {
             List<Product> result = productService.findAllByName(data.get("productName"));
@@ -105,7 +105,7 @@ public class CashierController {
 
     //getProductsWithCategoryNameSortedByName mutual
 
-    @GetMapping("/getClientsBySurname")
+    @PostMapping("/getClientsBySurname")
     public ResponseEntity<List<CustomerCard>> getClientsBySurname(@RequestBody Map<String, String> data) {
         try {
             List<CustomerCard> result = customerCardService.findAllBySurname(data.get("custSurname"));
@@ -117,7 +117,7 @@ public class CashierController {
         }
     }
 
-    @GetMapping("/getAllChecksMadeToday")
+    @PostMapping("/getAllChecksMadeToday")
     public ResponseEntity<List<CheckInfo>> getAllChecksMadeToday(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
@@ -134,7 +134,7 @@ public class CashierController {
         }
     }
 
-    @GetMapping("/getAllChecksMadeInPeriod")
+    @PostMapping("/getAllChecksMadeInPeriod")
     public ResponseEntity<List<CheckInfo>> getAllChecksMadeInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
@@ -149,7 +149,7 @@ public class CashierController {
         }
     }
 
-    @GetMapping("/getCheckInfoByCheckNumber")
+    @PostMapping("/getCheckInfoByCheckNumber")
     public ResponseEntity<CheckInfo> getCheckInfoByCheckNumber(@RequestBody Map<String, String> data) {
         try {
             String checkNumber = data.get("checkNumber");
@@ -168,7 +168,7 @@ public class CashierController {
 
     //getStoreProductInfoByUPC mutual
 
-    @GetMapping("/getSelfInfo")
+    @PostMapping("/getSelfInfo")
     public ResponseEntity<Employee> getSelfInfo(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");

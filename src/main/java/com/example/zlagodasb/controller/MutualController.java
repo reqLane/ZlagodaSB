@@ -196,7 +196,7 @@ public class MutualController {
         }
     }
 
-    @GetMapping("/getProductsWithCategoryNameSortedByName")
+    @PostMapping("/getProductsWithCategoryNameSortedByName")
     public ResponseEntity<List<Product>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
         try {
             Category category = categoryService.findByCategoryName(data.get("categoryName"));
@@ -211,7 +211,7 @@ public class MutualController {
         }
     }
 
-    @GetMapping("/getStoreProductInfoByUPC")
+    @PostMapping("/getStoreProductInfoByUPC")
     public ResponseEntity<StoreProductInfo> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
         try {
             StoreProductInfo result = storeProductService.getInfoByUPC(data.get("UPC"));
@@ -221,7 +221,7 @@ public class MutualController {
         }
     }
 
-    @GetMapping("/getPromotionalProductsSorted")
+    @PostMapping("/getPromotionalProductsSorted")
     public ResponseEntity<List<StoreProductInfo>> getPromotionalProductsSorted(@RequestBody Map<String, String> data) {
         try {
             List<StoreProductInfo> result = storeProductService.findAllPromotionalSortedBy(data.get("sortBy"));
@@ -231,7 +231,7 @@ public class MutualController {
         }
     }
 
-    @GetMapping("/getNonPromotionalProductsSorted")
+    @PostMapping("/getNonPromotionalProductsSorted")
     public ResponseEntity<List<StoreProductInfo>> getNonPromotionalProductsSorted(@RequestBody Map<String, String> data) {
         try {
             List<StoreProductInfo> result = storeProductService.findAllNonPromotionalSortedBy(data.get("sortBy"));

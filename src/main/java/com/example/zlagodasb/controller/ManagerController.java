@@ -15,7 +15,6 @@ import com.example.zlagodasb.product.model.ProductModel;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.sale.SaleService;
 import com.example.zlagodasb.store_product.StoreProduct;
-import com.example.zlagodasb.store_product.model.StoreProductInfo;
 import com.example.zlagodasb.store_product.model.StoreProductModel;
 import com.example.zlagodasb.store_product.StoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -350,7 +349,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getEmployeesBySurname")
+    @PostMapping("/getEmployeesBySurname")
     public ResponseEntity<List<Employee>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
         try {
             List<Employee> result = employeeService.findAllBySurname(data.get("surname"));
@@ -362,7 +361,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getCustomersWithPercentSortedBySurname")
+    @PostMapping("/getCustomersWithPercentSortedBySurname")
     public ResponseEntity<List<CustomerCard>> getCustomersWithPercentSortedBySurname(@RequestBody Map<String, String> data) {
         try {
             List<CustomerCard> result = customerCardService.findAllWithPercentSortedBySurname(Integer.parseInt(data.get("percent")));
@@ -382,7 +381,7 @@ public class ManagerController {
 
     //getNonPromotionalProductsSorted mutual
 
-    @GetMapping("/getChecksInfoOfCashierInPeriod")
+    @PostMapping("/getChecksInfoOfCashierInPeriod")
     public ResponseEntity<List<CheckInfo>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
@@ -398,7 +397,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getAllChecksInfoInPeriod")
+    @PostMapping("/getAllChecksInfoInPeriod")
     public ResponseEntity<List<CheckInfo>> getAllChecksInfoInPeriod(@RequestBody Map<String, String> data) {
         try {
             Date startDate = Date.valueOf(data.get("startDate"));
@@ -413,7 +412,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getTotalIncomeFromChecksOfCashierInPeriod")
+    @PostMapping("/getTotalIncomeFromChecksOfCashierInPeriod")
     public ResponseEntity<BigDecimal> getTotalIncomeFromChecksOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
@@ -426,7 +425,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getTotalIncomeFromChecksInPeriod")
+    @PostMapping("/getTotalIncomeFromChecksInPeriod")
     public ResponseEntity<BigDecimal> getTotalIncomeFromChecksInPeriod(@RequestBody Map<String, String> data) {
         try {
             Date startDate = Date.valueOf(data.get("startDate"));
@@ -438,7 +437,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/getTotalAmountOfProductSoldInPeriod")
+    @PostMapping("/getTotalAmountOfProductSoldInPeriod")
     public ResponseEntity<Long> getTotalAmountOfProductSoldInPeriod(@RequestBody Map<String, String> data) {
         try {
             String productName = data.get("productName");
