@@ -28,6 +28,10 @@ public class CustomerCardService {
         return customerCardRepo.findAllWithPercentSortedBySurname(percent);
     }
 
+    public List<CustomerCard> findAllBySurname(String custSurname) {
+        return customerCardRepo.findAllByCustSurname(custSurname);
+    }
+
     //DEFAULT OPERATIONS
 
     public List<CustomerCard> findAll() {

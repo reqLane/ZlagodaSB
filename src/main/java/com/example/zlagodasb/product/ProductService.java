@@ -28,6 +28,10 @@ public class ProductService {
         return productRepo.findAllSortedByProductName();
     }
 
+    public List<Product> findAllByName(String productName) {
+        return productRepo.findAllByProductName(productName);
+    }
+
     public List<Product> findAllWithCategorySortedByName(Integer categoryNumber) {
         return productRepo.findAllWithCategoryNumberSortedByName(categoryNumber);
     }

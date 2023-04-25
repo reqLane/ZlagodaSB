@@ -54,7 +54,7 @@ public class CheckRepo {
         return jdbcTemplate.query(sql, mapper, cardNumber);
     }
 
-    @Transactional(readOnly=true)//distinct
+    @Transactional(readOnly=true)
     public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE id_employee = ?" +
@@ -62,11 +62,21 @@ public class CheckRepo {
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), idCashier, startDate, endDate);
     }
 
-    @Transactional(readOnly=true)//distinct
+    @Transactional(readOnly=true)
     public List<CheckInfo> getAllChecksInfoInPeriod(Date startDate, Date endDate) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE print_date BETWEEN ? AND ?";
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), startDate, endDate);
+    }
+
+    @Transactional(readOnly=true)//distinct
+    public CheckInfo getCheckInfoByCheckNumber(String checkNumber) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE check_number = ?";
+        List<CheckInfo> list = jdbcTemplate.query(sql, new CheckInfoRowMapper(), checkNumber);
+        if(list.isEmpty()) return null;
+
+        return list.get(0);
     }
 
     @Transactional(readOnly=true)

@@ -48,11 +48,23 @@ public class StoreProductRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<StoreProductInfo> getInfoByUPC(String UPC) {
+    public List<StoreProductInfo> findAllSortedByProductName() {
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
+                " ORDER BY Product.product_name";
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)
+    public StoreProductInfo getInfoByUPC(String UPC) {
         String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product" +
-                " ON Store_Product.id_product = Product.id_product";
-        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
+                " ON Store_Product.id_product = Product.id_product" +
+                " WHERE Store_Product.UPC = ?";
+        List<StoreProductInfo> list = jdbcTemplate.query(sql, new StoreProductInfoRowMapper(), UPC);
+        if(list.isEmpty()) return null;
+
+        return list.get(0);
     }
 
     @Transactional(readOnly=true)

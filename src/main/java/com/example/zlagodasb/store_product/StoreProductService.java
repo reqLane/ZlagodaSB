@@ -24,7 +24,11 @@ public class StoreProductService {
         return storeProductRepo.findAllSortedByProductsNumber();
     }
 
-    public List<StoreProductInfo> getInfoByUPC(String UPC) {
+    public List<StoreProductInfo> findAllSortedByName() {
+        return storeProductRepo.findAllSortedByProductName();
+    }
+
+    public StoreProductInfo getInfoByUPC(String UPC) {
         return storeProductRepo.getInfoByUPC(UPC);
     }
 

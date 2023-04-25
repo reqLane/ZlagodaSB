@@ -44,6 +44,10 @@ public class CheckService {
         return checkRepo.getAllChecksInfoInPeriod(startDate, endDate);
     }
 
+    public CheckInfo getCheckInfoByCheckNumber(String checkNumber) {
+        return checkRepo.getCheckInfoByCheckNumber(checkNumber);
+    }
+
     public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
         BigDecimal result = checkRepo.getTotalIncomeFromChecksOfCashierInPeriod(idCashier, startDate, endDate);
 

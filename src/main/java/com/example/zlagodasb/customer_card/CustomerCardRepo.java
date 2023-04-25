@@ -63,6 +63,18 @@ public class CustomerCardRepo {
         return result;
     }
 
+    @Transactional(readOnly=true)
+    public List<CustomerCard> findAllByCustSurname(String custSurname) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE cust_surname LIKE ?";
+        List<CustomerCard> result = jdbcTemplate.query(sql, mapper, '%' + custSurname + '%');
+
+        for (CustomerCard customerCard : result)
+            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
+
+        return result;
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)

@@ -95,6 +95,19 @@ public class ProductRepo {
         return jdbcTemplate.queryForObject(sql, Long.class, idProduct, startDate, endDate);
     }
 
+    @Transactional(readOnly=true)
+    public List<Product> findAllByProductName(String productName) {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE product_name LIKE ?";
+        List<Product> result = jdbcTemplate.query(sql, mapper, '%' + productName + '%');
+
+        for (Product product : result) {
+            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
+        }
+
+        return result;
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)

@@ -13,6 +13,7 @@ import com.example.zlagodasb.product.Product;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.store_product.StoreProduct;
 import com.example.zlagodasb.store_product.StoreProductService;
+import com.example.zlagodasb.store_product.model.StoreProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -166,6 +167,77 @@ public class MutualController {
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
+        }
+    }
+
+    //FUNCTIONAL OPERATIONS
+
+    @GetMapping("/getProductsSortedByName")
+    public ResponseEntity<List<Product>> getProductsSortedByName() {
+        try {
+            List<Product> result = productService.findAllSortedByName();
+            for (Product product : result)
+                product.setStoreProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCustomersSortedBySurname")
+    public ResponseEntity<List<CustomerCard>> getCustomersSortedBySurname() {
+        try {
+            List<CustomerCard> result = customerCardService.findAllCardsSortedBySurname();
+            for (CustomerCard customerCard : result)
+                customerCard.setChecks(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getProductsWithCategoryNameSortedByName")
+    public ResponseEntity<List<Product>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
+        try {
+            Category category = categoryService.findByCategoryName(data.get("categoryName"));
+            if(category == null) throw new Exception("Category with name not found");
+
+            List<Product> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
+            for (Product product : result)
+                product.setStoreProducts(null);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getStoreProductInfoByUPC")
+    public ResponseEntity<StoreProductInfo> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
+        try {
+            StoreProductInfo result = storeProductService.getInfoByUPC(data.get("UPC"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/getPromotionalProductsSorted")
+    public ResponseEntity<List<StoreProductInfo>> getPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+        try {
+            List<StoreProductInfo> result = storeProductService.findAllPromotionalSortedBy(data.get("sortBy"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getNonPromotionalProductsSorted")
+    public ResponseEntity<List<StoreProductInfo>> getNonPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+        try {
+            List<StoreProductInfo> result = storeProductService.findAllNonPromotionalSortedBy(data.get("sortBy"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 }
