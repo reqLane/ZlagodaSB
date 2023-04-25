@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +52,18 @@ public class StoreProductService {
     }
 
     public StoreProduct create(StoreProductModel storeProductModel) {
-        return storeProductRepo.create(storeProductModel.toEntity());
+        StoreProduct entity = storeProductModel.toEntity();
+
+        List<StoreProduct> similarStoreProducts = storeProductRepo.findByIdProduct(entity.getIdProduct());
+        for (StoreProduct similarStoreProduct : similarStoreProducts) {
+            double newSellingPrice = entity.getSellingPrice().doubleValue();
+            if(similarStoreProduct.isPromotionalProduct())
+                newSellingPrice *= 0.8;
+            similarStoreProduct.setSellingPrice(BigDecimal.valueOf(newSellingPrice));
+            storeProductRepo.update(similarStoreProduct);
+        }
+
+        return storeProductRepo.create(entity);
     }
 
     public void update(StoreProduct storeProduct) {

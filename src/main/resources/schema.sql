@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Employee(
     empl_name VARCHAR(50) NOT NULL,
     empl_patronymic VARCHAR(50) NULL,
     empl_role VARCHAR(10) NOT NULL,
-    salary DECIMAL(13,4) NOT NULL,
+    salary DECIMAL(13,4) NOT NULL CHECK (salary >= 0),
     date_of_birth DATE NOT NULL CHECK (DATEDIFF('YEAR', date_of_birth, NOW()) >= 18),
     date_of_start DATE NOT NULL,
     phone_number VARCHAR(13) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Checks(
     card_number VARCHAR(13) NULL,
     print_date DATETIME NOT NULL,
     sum_total DECIMAL(13,4) NOT NULL CHECK (sum_total >= 0),
-    vat DECIMAL(13,4) NOT NULL,
+    vat DECIMAL(13,4) NOT NULL CHECK (vat >= 0),
     PRIMARY KEY (check_number),
     FOREIGN KEY (id_employee) REFERENCES Employee(id_employee)
         ON UPDATE CASCADE
