@@ -1,12 +1,8 @@
 package com.example.zlagodasb.product;
 
-import com.example.zlagodasb.store_product.StoreProduct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +15,4 @@ public class Product {
     private String productName;
     private String manufacturer;
     private String characteristics;
-
-    private List<StoreProduct> storeProducts = new ArrayList<>();
 }

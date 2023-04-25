@@ -1,14 +1,11 @@
 package com.example.zlagodasb.employee;
 
-import com.example.zlagodasb.check.Check;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -29,6 +26,4 @@ public class Employee {
     private String city;
     private String street;
     private String zipCode;
-
-    private List<Check> checks = new ArrayList<>();
 }

@@ -25,14 +25,10 @@ public class CheckRepo {
     private final String tableName;
     private final DataSource dataSource;
 
-    private final SaleRepo saleRepo;
-
     @Autowired
     public CheckRepo(JdbcTemplate jdbcTemplate,
-                        SaleRepo saleRepo,
                         DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.saleRepo = saleRepo;
         this.dataSource = dataSource;
         mapper = new CheckRowMapper();
         tableName = Check.TABLE_NAME;
@@ -101,12 +97,7 @@ public class CheckRepo {
     @Transactional(readOnly=true)
     public List<Check> findAll(){
         String sql = "SELECT * FROM " + tableName;
-        List<Check> result = jdbcTemplate.query(sql, mapper);
-
-        for (Check check : result)
-            check.setSales(saleRepo.findByCheckNumber(check.getCheckNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -116,9 +107,7 @@ public class CheckRepo {
         List<Check> list = jdbcTemplate.query(sql, mapper, checkNumber);
         if(list.isEmpty()) return null;
 
-        Check result = list.get(0);
-        result.setSales(saleRepo.findByCheckNumber(result.getCheckNumber()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional

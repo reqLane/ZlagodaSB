@@ -42,7 +42,12 @@ public class CheckService {
             endDate = tmp;
         }
 
-        return checkRepo.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
+        List<CheckInfo> result = checkRepo.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
+        for (CheckInfo checkInfo : result) {
+            checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
+        }
+
+        return result;
     }
 
     public List<CheckInfo> getAllChecksInfoInPeriod(Date startDate, Date endDate) {
@@ -52,11 +57,22 @@ public class CheckService {
             endDate = tmp;
         }
 
-        return checkRepo.getAllChecksInfoInPeriod(startDate, endDate);
+        List<CheckInfo> result = checkRepo.getAllChecksInfoInPeriod(startDate, endDate);
+        for (CheckInfo checkInfo : result) {
+            checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
+        }
+
+        return result;
     }
 
-    public CheckInfo getCheckInfoByCheckNumber(String checkNumber) {
-        return checkRepo.getCheckInfoByCheckNumber(checkNumber);
+    public CheckInfo getCheckInfoByCheckNumber(String checkNumber) throws Exception {
+        CheckInfo result = checkRepo.getCheckInfoByCheckNumber(checkNumber);
+        if(result == null)
+            throw new Exception("Check with number not found");
+
+        result.setSalesInfo(saleService.getSalesInfoByCheckNumber(result.getCheckNumber()));
+
+        return result;
     }
 
     public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {

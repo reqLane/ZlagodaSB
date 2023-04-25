@@ -176,8 +176,6 @@ public class MutualController {
     public ResponseEntity<List<Product>> getProductsSortedByName() {
         try {
             List<Product> result = productService.findAllSortedByName();
-            for (Product product : result)
-                product.setStoreProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -188,8 +186,6 @@ public class MutualController {
     public ResponseEntity<List<CustomerCard>> getCustomersSortedBySurname() {
         try {
             List<CustomerCard> result = customerCardService.findAllCardsSortedBySurname();
-            for (CustomerCard customerCard : result)
-                customerCard.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -203,8 +199,6 @@ public class MutualController {
             if(category == null) throw new Exception("Category with name not found");
 
             List<Product> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
-            for (Product product : result)
-                product.setStoreProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

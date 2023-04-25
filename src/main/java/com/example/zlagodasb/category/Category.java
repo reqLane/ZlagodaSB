@@ -1,12 +1,8 @@
 package com.example.zlagodasb.category;
 
-import com.example.zlagodasb.product.Product;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,6 +12,4 @@ public class Category {
 
     private Integer categoryNumber;
     private String categoryName;
-
-    private List<Product> products = new ArrayList<>();
 }

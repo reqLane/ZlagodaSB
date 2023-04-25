@@ -1,6 +1,5 @@
 package com.example.zlagodasb.employee;
 
-import com.example.zlagodasb.check.CheckRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,14 +22,10 @@ public class EmployeeRepo {
     private final String tableName;
     private final DataSource dataSource;
 
-    private final CheckRepo checkRepo;
-
     @Autowired
     public EmployeeRepo(JdbcTemplate jdbcTemplate,
-                        CheckRepo checkRepo,
                         DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.checkRepo = checkRepo;
         this.dataSource = dataSource;
         mapper = new EmployeeRowMapper();
         tableName = Employee.TABLE_NAME;
@@ -42,12 +37,7 @@ public class EmployeeRepo {
     public List<Employee> findAllSortedByEmplSurname() {
         String sql = "SELECT * FROM " + tableName +
                 " ORDER BY empl_surname";
-        List<Employee> result = jdbcTemplate.query(sql, mapper);
-
-        for (Employee employee : result)
-            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -55,24 +45,14 @@ public class EmployeeRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE empl_role = 'Cashier'" +
                 " ORDER BY empl_surname";
-        List<Employee> result = jdbcTemplate.query(sql, mapper);
-
-        for (Employee employee : result)
-            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
     public List<Employee> findAllWithEmplSurnameContains(String surname) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE empl_surname LIKE ?";
-        List<Employee> result = jdbcTemplate.query(sql, mapper, '%' + surname + '%');
-
-        for (Employee employee : result)
-            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper, '%' + surname + '%');
     }
 
     //DEFAULT OPERATIONS
@@ -80,12 +60,7 @@ public class EmployeeRepo {
     @Transactional(readOnly=true)
     public List<Employee> findAll() {
         String sql = "SELECT * FROM " + tableName;
-        List<Employee> result = jdbcTemplate.query(sql, mapper);
-
-        for (Employee employee : result)
-            employee.setChecks(checkRepo.findByIdEmployee(employee.getIdEmployee()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -95,9 +70,7 @@ public class EmployeeRepo {
         List<Employee> list = jdbcTemplate.query(sql, mapper, idEmployee);
         if(list.isEmpty()) return null;
 
-        Employee result = list.get(0);
-        result.setChecks(checkRepo.findByIdEmployee(result.getIdEmployee()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional

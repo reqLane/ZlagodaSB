@@ -1,6 +1,5 @@
 package com.example.zlagodasb.product;
 
-import com.example.zlagodasb.store_product.StoreProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,14 +22,10 @@ public class ProductRepo {
     private final String tableName;
     private final DataSource dataSource;
 
-    private final StoreProductRepo storeProductRepo;
-
     @Autowired
     public ProductRepo(JdbcTemplate jdbcTemplate,
-                       StoreProductRepo storeProductRepo,
                        DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.storeProductRepo = storeProductRepo;
         this.dataSource = dataSource;
         mapper = new ProductRowMapper();
         tableName = Product.TABLE_NAME;
@@ -52,22 +47,14 @@ public class ProductRepo {
         List<Product> list = jdbcTemplate.query(sql, mapper, productName);
         if(list.isEmpty()) return null;
 
-        Product result = list.get(0);
-        result.setStoreProducts(storeProductRepo.findByIdProduct(result.getIdProduct()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional(readOnly=true)
     public List<Product> findAllSortedByProductName() {
         String sql = "SELECT * FROM " + tableName +
                 " ORDER BY product_name";
-        List<Product> result = jdbcTemplate.query(sql, mapper);
-
-        for (Product product : result) {
-            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
-        }
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -75,13 +62,7 @@ public class ProductRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE category_number = ?" +
                 " ORDER BY product_name";
-        List<Product> result = jdbcTemplate.query(sql, mapper, categoryNumber);
-
-        for (Product product : result) {
-            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
-        }
-
-        return result;
+        return jdbcTemplate.query(sql, mapper, categoryNumber);
     }
 
     @Transactional(readOnly=true)
@@ -99,13 +80,7 @@ public class ProductRepo {
     public List<Product> findAllByProductName(String productName) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE product_name LIKE ?";
-        List<Product> result = jdbcTemplate.query(sql, mapper, '%' + productName + '%');
-
-        for (Product product : result) {
-            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
-        }
-
-        return result;
+        return jdbcTemplate.query(sql, mapper, '%' + productName + '%');
     }
 
     //DEFAULT OPERATIONS
@@ -113,13 +88,7 @@ public class ProductRepo {
     @Transactional(readOnly=true)
     public List<Product> findAll(){
         String sql = "SELECT * FROM " + tableName;
-        List<Product> result = jdbcTemplate.query(sql, mapper);
-
-        for (Product product : result) {
-            product.setStoreProducts(storeProductRepo.findByIdProduct(product.getIdProduct()));
-        }
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -129,9 +98,7 @@ public class ProductRepo {
         List<Product> list = jdbcTemplate.query(sql, mapper, idProduct);
         if(list.isEmpty()) return null;
 
-        Product result = list.get(0);
-        result.setStoreProducts(storeProductRepo.findByIdProduct(result.getIdProduct()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional

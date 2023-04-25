@@ -1,6 +1,5 @@
 package com.example.zlagodasb.category;
 
-import com.example.zlagodasb.product.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,14 +22,10 @@ public class CategoryRepo {
     private final String tableName;
     private final DataSource dataSource;
 
-    private final ProductRepo productRepo;
-
     @Autowired
     public CategoryRepo(JdbcTemplate jdbcTemplate,
-                        ProductRepo productRepo,
                         DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.productRepo = productRepo;
         this.dataSource = dataSource;
         mapper = new CategoryRowMapper();
         tableName = Category.TABLE_NAME;
@@ -45,21 +40,14 @@ public class CategoryRepo {
         List<Category> list = jdbcTemplate.query(sql, mapper, categoryName);
         if(list.isEmpty()) return null;
 
-        Category result = list.get(0);
-        result.setProducts(productRepo.findByCategoryNumber(result.getCategoryNumber()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional(readOnly=true)
     public List<Category> findAllSortedByCategoryName() {
         String sql = "SELECT * FROM " + tableName +
                 " ORDER BY category_name";
-        List<Category> result = jdbcTemplate.query(sql, mapper);
-
-        for (Category category : result)
-            category.setProducts(productRepo.findByCategoryNumber(category.getCategoryNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     //DEFAULT OPERATIONS
@@ -67,12 +55,7 @@ public class CategoryRepo {
     @Transactional(readOnly=true)
     public List<Category> findAll(){
         String sql = "SELECT * FROM " + tableName;
-        List<Category> result = jdbcTemplate.query(sql, mapper);
-
-        for (Category category : result)
-            category.setProducts(productRepo.findByCategoryNumber(category.getCategoryNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -82,9 +65,7 @@ public class CategoryRepo {
         List<Category> list = jdbcTemplate.query(sql, mapper, categoryNumber);
         if(list.isEmpty()) return null;
 
-        Category result = list.get(0);
-        result.setProducts(productRepo.findByCategoryNumber(result.getCategoryNumber()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional

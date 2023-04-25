@@ -249,8 +249,6 @@ public class ManagerController {
     public ResponseEntity<List<Category>> getCategoryReport() {
         try {
             List<Category> result = categoryService.findAll();
-            for (Category category : result)
-                category.setProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -260,8 +258,6 @@ public class ManagerController {
     public ResponseEntity<List<Product>> getProductReport() {
         try {
             List<Product> result = productService.findAll();
-            for (Product product : result)
-                product.setStoreProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -280,8 +276,6 @@ public class ManagerController {
     public ResponseEntity<List<Employee>> getEmployeeReport() {
         try {
             List<Employee> result = employeeService.findAll();
-            for (Employee employee : result)
-                employee.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -291,8 +285,6 @@ public class ManagerController {
     public ResponseEntity<List<CustomerCard>> getCustomerCardReport() {
         try {
             List<CustomerCard> result = customerCardService.findAll();
-            for (CustomerCard customerCard : result)
-                customerCard.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -303,8 +295,6 @@ public class ManagerController {
     public ResponseEntity<List<Employee>> getEmployeesSortedBySurname() {
         try {
             List<Employee> result = employeeService.findAllSortedByEmplSurname();
-            for (Employee employee : result)
-                employee.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -315,8 +305,6 @@ public class ManagerController {
     public ResponseEntity<List<Employee>> getCashiersSortedBySurname() {
         try {
             List<Employee> result = employeeService.findCashiersSortedByEmplSurname();
-            for (Employee employee : result)
-                employee.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -329,8 +317,6 @@ public class ManagerController {
     public ResponseEntity<List<Category>> getCategoriesSortedByName() {
         try {
             List<Category> result = categoryService.findAllSortedByName();
-            for (Category category : result)
-                category.setProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -353,8 +339,6 @@ public class ManagerController {
     public ResponseEntity<List<Employee>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
         try {
             List<Employee> result = employeeService.findAllBySurname(data.get("surname"));
-            for (Employee employee : result)
-                employee.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -365,8 +349,6 @@ public class ManagerController {
     public ResponseEntity<List<CustomerCard>> getCustomersWithPercentSortedBySurname(@RequestBody Map<String, String> data) {
         try {
             List<CustomerCard> result = customerCardService.findAllWithPercentSortedBySurname(Integer.parseInt(data.get("percent")));
-            for (CustomerCard customerCard : result)
-                customerCard.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -388,9 +370,6 @@ public class ManagerController {
             Date startDate = Date.valueOf(data.get("startDate"));
             Date endDate = Date.valueOf(data.get("endDate"));
             List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
-            for (CheckInfo checkInfo : result) {
-                checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
-            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -403,9 +382,6 @@ public class ManagerController {
             Date startDate = Date.valueOf(data.get("startDate"));
             Date endDate = Date.valueOf(data.get("endDate"));
             List<CheckInfo> result = checkService.getAllChecksInfoInPeriod(startDate, endDate);
-            for (CheckInfo checkInfo : result) {
-                checkInfo.setSalesInfo(saleService.getSalesInfoByCheckNumber(checkInfo.getCheckNumber()));
-            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

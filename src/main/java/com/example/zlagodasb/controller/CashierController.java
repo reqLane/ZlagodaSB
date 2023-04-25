@@ -88,8 +88,6 @@ public class CashierController {
     public ResponseEntity<List<Product>> getProductsByName(@RequestBody Map<String, String> data) {
         try {
             List<Product> result = productService.findAllByName(data.get("productName"));
-            for (Product product : result)
-                product.setStoreProducts(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -102,8 +100,6 @@ public class CashierController {
     public ResponseEntity<List<CustomerCard>> getClientsBySurname(@RequestBody Map<String, String> data) {
         try {
             List<CustomerCard> result = customerCardService.findAllBySurname(data.get("custSurname"));
-            for (CustomerCard customerCard : result)
-                customerCard.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -147,8 +143,6 @@ public class CashierController {
         try {
             String checkNumber = data.get("checkNumber");
             CheckInfo result = checkService.getCheckInfoByCheckNumber(checkNumber);
-            if(result == null) throw new Exception("Check with number not found");
-            result.setSalesInfo(saleService.getSalesInfoByCheckNumber(result.getCheckNumber()));
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(null);
@@ -166,8 +160,6 @@ public class CashierController {
         try {
             String idCashier = data.get("idCashier");
             Employee result = employeeService.findById(idCashier);
-            if(result == null) throw new Exception("Cashier with id not found");
-            result.setChecks(null);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(null);

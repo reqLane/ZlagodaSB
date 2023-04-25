@@ -1,6 +1,5 @@
 package com.example.zlagodasb.customer_card;
 
-import com.example.zlagodasb.check.CheckRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,14 +22,10 @@ public class CustomerCardRepo {
     private final String tableName;
     private final DataSource dataSource;
 
-    private final CheckRepo checkRepo;
-
     @Autowired
     public CustomerCardRepo(JdbcTemplate jdbcTemplate,
-                        CheckRepo checkRepo,
                         DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.checkRepo = checkRepo;
         this.dataSource = dataSource;
         mapper = new CustomerCardRowMapper();
         tableName = CustomerCard.TABLE_NAME;
@@ -42,12 +37,7 @@ public class CustomerCardRepo {
     public List<CustomerCard> findAllSortedByCustSurname() {
         String sql = "SELECT * FROM " + tableName +
                 " ORDER BY cust_surname";
-        List<CustomerCard> result = jdbcTemplate.query(sql, mapper);
-
-        for (CustomerCard customerCard : result)
-            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -55,24 +45,14 @@ public class CustomerCardRepo {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE percent = ?" +
                 " ORDER BY cust_surname";
-        List<CustomerCard> result = jdbcTemplate.query(sql, mapper, percent);
-
-        for (CustomerCard customerCard : result)
-            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper, percent);
     }
 
     @Transactional(readOnly=true)
     public List<CustomerCard> findAllByCustSurname(String custSurname) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE cust_surname LIKE ?";
-        List<CustomerCard> result = jdbcTemplate.query(sql, mapper, '%' + custSurname + '%');
-
-        for (CustomerCard customerCard : result)
-            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper, '%' + custSurname + '%');
     }
 
     //DEFAULT OPERATIONS
@@ -80,12 +60,7 @@ public class CustomerCardRepo {
     @Transactional(readOnly=true)
     public List<CustomerCard> findAll(){
         String sql = "SELECT * FROM " + tableName;
-        List<CustomerCard> result = jdbcTemplate.query(sql, mapper);
-
-        for (CustomerCard customerCard : result)
-            customerCard.setChecks(checkRepo.findByCardNumber(customerCard.getCardNumber()));
-
-        return result;
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Transactional(readOnly=true)
@@ -95,9 +70,7 @@ public class CustomerCardRepo {
         List<CustomerCard> list = jdbcTemplate.query(sql, mapper, cardNumber);
         if(list.isEmpty()) return null;
 
-        CustomerCard result = list.get(0);
-        result.setChecks(checkRepo.findByCardNumber(result.getCardNumber()));
-        return result;
+        return list.get(0);
     }
 
     @Transactional
