@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.zlagodasb.util.Utils.parseIdFrom;
+
 @Service
 public class CheckService {
     private final CheckRepo checkRepo;
@@ -118,6 +120,7 @@ public class CheckService {
 
         double sumTotal = 0;
         for (SaleModel saleModel : checkModel.getSaleModels()) {
+            saleModel.setUPC(parseIdFrom(saleModel.getUPC()));
             Sale sale = saleModel.toEntity();
             sale.setCheckNumber(entity.getCheckNumber());
             sale = saleService.create(sale);
