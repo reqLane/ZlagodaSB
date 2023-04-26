@@ -220,9 +220,12 @@ public class MutualController {
     //FUNCTIONAL OPERATIONS
 
     @GetMapping("/getProductsSortedByName")
-    public ResponseEntity<List<ProductInfo>> getProductsSortedByName() {
+    public ResponseEntity<List<Map<String, Object>>> getProductsSortedByName() {
         try {
-            List<ProductInfo> result = productService.findAllSortedByName();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (ProductInfo productInfo : productService.findAllSortedByName()) {
+                result.add(productInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -230,9 +233,12 @@ public class MutualController {
     }
 
     @GetMapping("/getCustomersSortedBySurname")
-    public ResponseEntity<List<CustomerCard>> getCustomersSortedBySurname() {
+    public ResponseEntity<List<Map<String, Object>>> getCustomersSortedBySurname() {
         try {
-            List<CustomerCard> result = customerCardService.findAllCardsSortedBySurname();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.findAllCardsSortedBySurname()) {
+                result.add(customerCard.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -240,12 +246,15 @@ public class MutualController {
     }
 
     @PostMapping("/getProductsWithCategoryNameSortedByName")
-    public ResponseEntity<List<ProductInfo>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
         try {
             Category category = categoryService.findByCategoryName(data.get("categoryName"));
             if(category == null) throw new Exception("Category with name not found");
 
-            List<ProductInfo> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (ProductInfo productInfo : productService.findAllWithCategorySortedByName(category.getCategoryNumber())) {
+                result.add(productInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -253,19 +262,22 @@ public class MutualController {
     }
 
     @PostMapping("/getStoreProductInfoByUPC")
-    public ResponseEntity<StoreProductInfo> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Object>> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
         try {
             StoreProductInfo result = storeProductService.getInfoByUPC(data.get("UPC"));
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result.toMap());
         } catch (Exception e) {
             return ResponseEntity.ok(null);
         }
     }
 
     @PostMapping("/getPromotionalProductsSorted")
-    public ResponseEntity<List<StoreProductInfo>> getPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getPromotionalProductsSorted(@RequestBody Map<String, String> data) {
         try {
-            List<StoreProductInfo> result = storeProductService.findAllPromotionalSortedBy(data.get("sortBy"));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllPromotionalSortedBy(data.get("sortBy"))) {
+                result.add(storeProductInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -273,9 +285,12 @@ public class MutualController {
     }
 
     @PostMapping("/getNonPromotionalProductsSorted")
-    public ResponseEntity<List<StoreProductInfo>> getNonPromotionalProductsSorted(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getNonPromotionalProductsSorted(@RequestBody Map<String, String> data) {
         try {
-            List<StoreProductInfo> result = storeProductService.findAllNonPromotionalSortedBy(data.get("sortBy"));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllNonPromotionalSortedBy(data.get("sortBy"))) {
+                result.add(storeProductInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

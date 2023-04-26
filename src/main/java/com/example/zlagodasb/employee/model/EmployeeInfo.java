@@ -6,6 +6,8 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -23,4 +25,19 @@ public class EmployeeInfo {
     private String city;
     private String street;
     private String zipCode;
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("Employee ID", idEmployee);
+        map.put("Name", emplSurname + " " + emplName + " " + emplPatronymic);
+        map.put("Role", emplRole);
+        map.put("Salary", salary);
+        map.put("Date of birth", dateOfBirth);
+        map.put("Date of start", dateOfStart);
+        map.put("Phone", phoneNumber);
+        map.put("City", city);
+        map.put("Street", street);
+        map.put("Zip code", zipCode);
+        return map;
+    }
 }

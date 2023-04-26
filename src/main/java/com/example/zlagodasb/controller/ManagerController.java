@@ -283,45 +283,60 @@ public class ManagerController {
     //FUNCTIONAL OPERATIONS
 
     @GetMapping("/getCategoryReport")
-    public ResponseEntity<List<Category>> getCategoryReport() {
+    public ResponseEntity<List<Map<String, Object>>> getCategoryReport() {
         try {
-            List<Category> result = categoryService.findAll();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (Category category : categoryService.findAll()) {
+                result.add(category.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
     @GetMapping("/getProductReport")
-    public ResponseEntity<List<ProductInfo>> getProductReport() {
+    public ResponseEntity<List<Map<String, Object>>> getProductReport() {
         try {
-            List<ProductInfo> result = productService.findAllInfo();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (ProductInfo productInfo : productService.findAllInfo()) {
+                result.add(productInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
     @GetMapping("/getStoreProductReport")
-    public ResponseEntity<List<StoreProductInfo>> getStoreProductReport() {
+    public ResponseEntity<List<Map<String, Object>>> getStoreProductReport() {
         try {
-            List<StoreProductInfo> result = storeProductService.findAllInfo();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllInfo()) {
+                result.add(storeProductInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
     @GetMapping("/getEmployeeReport")
-    public ResponseEntity<List<EmployeeInfo>> getEmployeeReport() {
+    public ResponseEntity<List<Map<String, Object>>> getEmployeeReport() {
         try {
-            List<EmployeeInfo> result = employeeService.findAll();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.findAll()) {
+                result.add(employeeInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
     @GetMapping("/getCustomerCardReport")
-    public ResponseEntity<List<CustomerCard>> getCustomerCardReport() {
+    public ResponseEntity<List<Map<String, Object>>> getCustomerCardReport() {
         try {
-            List<CustomerCard> result = customerCardService.findAll();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.findAll()) {
+                result.add(customerCard.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -329,9 +344,12 @@ public class ManagerController {
     }
 
     @GetMapping("/getEmployeesSortedBySurname")
-    public ResponseEntity<List<EmployeeInfo>> getEmployeesSortedBySurname() {
+    public ResponseEntity<List<Map<String, Object>>> getEmployeesSortedBySurname() {
         try {
-            List<EmployeeInfo> result = employeeService.findAllSortedByEmplSurname();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.findAllSortedByEmplSurname()) {
+                result.add(employeeInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -339,9 +357,12 @@ public class ManagerController {
     }
 
     @GetMapping("/getCashiersSortedBySurname")
-    public ResponseEntity<List<EmployeeInfo>> getCashiersSortedBySurname() {
+    public ResponseEntity<List<Map<String, Object>>> getCashiersSortedBySurname() {
         try {
-            List<EmployeeInfo> result = employeeService.findCashiersSortedByEmplSurname();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.findCashiersSortedByEmplSurname()) {
+                result.add(employeeInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -351,9 +372,12 @@ public class ManagerController {
     //getCustomersSortedBySurname mutual
 
     @GetMapping("/getCategoriesSortedByName")
-    public ResponseEntity<List<Category>> getCategoriesSortedByName() {
+    public ResponseEntity<List<Map<String, Object>>> getCategoriesSortedByName() {
         try {
-            List<Category> result = categoryService.findAllSortedByName();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (Category category : categoryService.findAllSortedByName()) {
+                result.add(category.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -363,9 +387,12 @@ public class ManagerController {
     //getProductsSortedByName mutual
 
     @GetMapping("/getStoreProductsSortedByAmount")
-    public ResponseEntity<List<StoreProductInfo>> getStoreProductsSortedByAmount() {
+    public ResponseEntity<List<Map<String, Object>>> getStoreProductsSortedByAmount() {
         try {
-            List<StoreProductInfo> result = storeProductService.findAllSortedByAmount();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllSortedByAmount()) {
+                result.add(storeProductInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -373,9 +400,12 @@ public class ManagerController {
     }
 
     @PostMapping("/getEmployeesBySurname")
-    public ResponseEntity<List<EmployeeInfo>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
         try {
-            List<EmployeeInfo> result = employeeService.findAllBySurname(data.get("surname"));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.findAllBySurname(data.get("surname"))) {
+                result.add(employeeInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -383,9 +413,12 @@ public class ManagerController {
     }
 
     @PostMapping("/getCustomersWithPercentSortedBySurname")
-    public ResponseEntity<List<CustomerCard>> getCustomersWithPercentSortedBySurname(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getCustomersWithPercentSortedBySurname(@RequestBody Map<String, String> data) {
         try {
-            List<CustomerCard> result = customerCardService.findAllWithPercentSortedBySurname(Integer.parseInt(data.get("percent")));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.findAllWithPercentSortedBySurname(Integer.parseInt(data.get("percent")))) {
+                result.add(customerCard.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -401,14 +434,17 @@ public class ManagerController {
     //getNonPromotionalProductsSorted mutual
 
     @PostMapping("/getChecksInfoOfCashierInPeriod")
-    public ResponseEntity<List<CheckInfo>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
 
             Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
             Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
 
-            List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CheckInfo checkInfo : checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate)) {
+                result.add(checkInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -416,12 +452,15 @@ public class ManagerController {
     }
 
     @PostMapping("/getAllChecksInfoInPeriod")
-    public ResponseEntity<List<CheckInfo>> getAllChecksInfoInPeriod(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getAllChecksInfoInPeriod(@RequestBody Map<String, String> data) {
         try {
             Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
             Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
 
-            List<CheckInfo> result = checkService.getAllChecksInfoInPeriod(startDate, endDate);
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CheckInfo checkInfo : checkService.getAllChecksInfoInPeriod(startDate, endDate)) {
+                result.add(checkInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

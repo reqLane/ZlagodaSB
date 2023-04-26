@@ -75,9 +75,12 @@ public class CashierController {
     //getProductsSortedByName mutual
 
     @GetMapping("/getStoreProductsSortedByName")
-    public ResponseEntity<List<StoreProductInfo>> getStoreProductsSortedByNumber() {
+    public ResponseEntity<List<Map<String, Object>>> getStoreProductsSortedByNumber() {
         try {
-            List<StoreProductInfo> result = storeProductService.findAllSortedByName();
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllSortedByName()) {
+                result.add(storeProductInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -87,9 +90,12 @@ public class CashierController {
     //getCustomersSortedBySurname mutual
 
     @PostMapping("/getProductsByName")
-    public ResponseEntity<List<ProductInfo>> getProductsByName(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getProductsByName(@RequestBody Map<String, String> data) {
         try {
-            List<ProductInfo> result = productService.findAllByName(data.get("productName"));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (ProductInfo productInfo : productService.findAllByName(data.get("productName"))) {
+                result.add(productInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -99,9 +105,12 @@ public class CashierController {
     //getProductsWithCategoryNameSortedByName mutual
 
     @PostMapping("/getClientsBySurname")
-    public ResponseEntity<List<CustomerCard>> getClientsBySurname(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getClientsBySurname(@RequestBody Map<String, String> data) {
         try {
-            List<CustomerCard> result = customerCardService.findAllBySurname(data.get("custSurname"));
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.findAllBySurname(data.get("custSurname"))) {
+                result.add(customerCard.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -109,7 +118,7 @@ public class CashierController {
     }
 
     @PostMapping("/getAllChecksMadeToday")
-    public ResponseEntity<List<CheckInfo>> getAllChecksMadeToday(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getAllChecksMadeToday(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
 
@@ -118,9 +127,10 @@ public class CashierController {
             calendar.add(Calendar.DAY_OF_MONTH, -1);
             Timestamp yesterday = new Timestamp(calendar.getTimeInMillis());
 
-            List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, yesterday, now);
-            for (CheckInfo checkInfo : result)
-                checkInfo.setSalesInfo(null);
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CheckInfo checkInfo : checkService.getChecksInfoOfCashierInPeriod(idCashier, yesterday, now)) {
+                result.add(checkInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -128,16 +138,17 @@ public class CashierController {
     }
 
     @PostMapping("/getAllChecksMadeInPeriod")
-    public ResponseEntity<List<CheckInfo>> getAllChecksMadeInPeriod(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Map<String, Object>>> getAllChecksMadeInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
 
             Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
             Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
 
-            List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
-            for (CheckInfo checkInfo : result)
-                checkInfo.setSalesInfo(null);
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CheckInfo checkInfo : checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate)) {
+                result.add(checkInfo.toMap());
+            }
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -145,11 +156,11 @@ public class CashierController {
     }
 
     @PostMapping("/getCheckInfoByCheckNumber")
-    public ResponseEntity<CheckInfo> getCheckInfoByCheckNumber(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Object>> getCheckInfoByCheckNumber(@RequestBody Map<String, String> data) {
         try {
             String checkNumber = data.get("checkNumber");
             CheckInfo result = checkService.getCheckInfoByCheckNumber(checkNumber);
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result.toMap());
         } catch (Exception e) {
             return ResponseEntity.ok(null);
         }
@@ -162,11 +173,11 @@ public class CashierController {
     //getStoreProductInfoByUPC mutual
 
     @PostMapping("/getSelfInfo")
-    public ResponseEntity<EmployeeInfo> getSelfInfo(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Object>> getSelfInfo(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
             EmployeeInfo result = employeeService.findById(idCashier);
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result.toMap());
         } catch (Exception e) {
             return ResponseEntity.ok(null);
         }

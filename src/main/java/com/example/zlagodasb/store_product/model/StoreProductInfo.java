@@ -1,11 +1,16 @@
 package com.example.zlagodasb.store_product.model;
 
+import com.example.zlagodasb.sale.model.SaleInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -19,4 +24,17 @@ public class StoreProductInfo {
     private boolean promotionalProduct;
     private String manufacturer;
     private String characteristics;
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("UPC", UPC);
+        map.put("Name", productName);
+        map.put("Amount", productsNumber);
+        map.put("Price", sellingPrice);
+        map.put("Expiration date", expirationDate);
+        map.put("Promo", promotionalProduct);
+        map.put("Manufacturer", manufacturer);
+        map.put("Characteristics", characteristics);
+        return map;
+    }
 }
