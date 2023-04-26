@@ -9,6 +9,7 @@ import com.example.zlagodasb.customer_card.model.CustomerCardModel;
 import com.example.zlagodasb.customer_card.CustomerCardService;
 import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.product.Product;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.product.model.ProductInfo;
@@ -105,10 +106,10 @@ public class MutualController {
     @GetMapping("/getEmployeeList")
     public ResponseEntity<List<String>> getEmployeeList() {
         try {
-            List<Employee> employeeList = employeeService.findAll();
+            List<EmployeeInfo> employeeList = employeeService.findAll();
             List<String> entries = new ArrayList<>();
-            for (Employee employee : employeeList) {
-                entries.add(employee.getIdEmployee());
+            for (EmployeeInfo employeeInfo : employeeList) {
+                entries.add(employeeInfo.getIdEmployee());
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
