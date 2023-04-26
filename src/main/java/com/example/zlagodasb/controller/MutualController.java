@@ -49,6 +49,25 @@ public class MutualController {
         this.checkService = checkService;
     }
 
+    //AUTHENTICATION
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<Map<String, String>> authenticate(@RequestBody Map<String, String> data) {
+        try {
+            String idEmployee = data.get("idEmployee");
+            String password = data.get("password");
+            Map<String, String> response = employeeService.authenticate(idEmployee, password);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("authenticated", "true");
+            response.put("emplRole", null);
+            response.put("idEmployee", null);
+            response.put("exception", e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+
     //INFORMATION LISTS
 
     @GetMapping("/getCategoryList")

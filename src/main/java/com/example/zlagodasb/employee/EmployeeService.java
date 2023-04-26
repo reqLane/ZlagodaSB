@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeService {
@@ -17,6 +15,27 @@ public class EmployeeService {
     @Autowired
     public EmployeeService(EmployeeRepo employeeRepo) {
         this.employeeRepo = employeeRepo;
+    }
+
+    //AUTHENTICATION
+
+    public Map<String, String> authenticate(String idEmployee, String password) throws Exception {
+        Employee entity = employeeRepo.findById(idEmployee);
+        if(entity == null) throw new Exception("Employee with idEmployee not found");
+
+        String expectedIdEmployee = entity.getIdEmployee();
+        if(!idEmployee.equals(expectedIdEmployee)) throw new Exception("idEmployee doesn't match idEmployee found (idk how you received this)");
+
+        String expectedPassword = entity.getPassword();
+        if(!password.equals(expectedPassword)) throw new Exception("Password is incorrect");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("authenticated", "true");
+        response.put("emplRole", entity.getEmplRole());
+        response.put("idEmployee", entity.getIdEmployee());
+        response.put("exception", null);
+
+        return response;
     }
 
     //OPERATIONS
