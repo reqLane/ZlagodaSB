@@ -184,6 +184,15 @@ public class ManagerController {
             return ResponseEntity.ok(false);
         }
     }
+    @PatchMapping("/updatePromoStoreProductList")
+    public ResponseEntity<Boolean> updatePromoStoreProductList() {
+        try {
+            storeProductService.updatePromoList();
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 
     @PutMapping("/deleteCategory")
     public ResponseEntity<Boolean> deleteCategory(@RequestBody Map<String, String> data) {
@@ -252,6 +261,17 @@ public class ManagerController {
             if(check == null) throw new Exception("Check with checkNumber not found");
 
             checkService.deleteById(check.getCheckNumber());
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @PutMapping("/deleteOldChecks")
+    public ResponseEntity<Boolean> deleteOldChecks() {
+        try {
+            List<Check> oldChecks = checkService.deleteOldChecks();
+            if(oldChecks.isEmpty()) throw new Exception("Old checks not found");
+
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);

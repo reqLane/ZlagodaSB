@@ -50,6 +50,12 @@ public class CheckRepo {
         return jdbcTemplate.query(sql, mapper, cardNumber);
     }
 
+    public List<Check> findOldChecks() {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE DATEDIFF('DAY', print_date, CURRENT_TIMESTAMP()) > 1095";
+        return jdbcTemplate.query(sql, mapper);
+    }
+
     @Transactional(readOnly=true)
     public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT * FROM " + tableName +

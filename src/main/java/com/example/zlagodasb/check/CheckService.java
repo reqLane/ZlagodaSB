@@ -34,6 +34,14 @@ public class CheckService {
 
     //OPERATIONS
 
+    public List<Check> deleteOldChecks() {
+        List<Check> oldChecks = checkRepo.findOldChecks();
+
+        delete(oldChecks);
+
+        return oldChecks;
+    }
+
     public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         if(startDate.compareTo(endDate) > 0) {
             Timestamp tmp = new Timestamp(startDate.getTime());

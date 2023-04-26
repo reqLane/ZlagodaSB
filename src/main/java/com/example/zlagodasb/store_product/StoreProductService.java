@@ -22,6 +22,16 @@ public class StoreProductService {
 
     //OPERATIONS
 
+    public void updatePromoList() {
+        for (StoreProduct storeProduct : storeProductRepo.findAllToBecomePromo()) {
+            if(!storeProduct.isPromotionalProduct()) {
+                storeProduct.setPromotionalProduct(true);
+                storeProduct.setSellingPrice(BigDecimal.valueOf(storeProduct.getSellingPrice().doubleValue() * 0.8));
+                storeProductRepo.update(storeProduct);
+            }
+        }
+    }
+
     public List<StoreProduct> findAllPresent() {
         return storeProductRepo.findAllPresent();
     }
