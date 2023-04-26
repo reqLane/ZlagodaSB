@@ -1,10 +1,12 @@
 package com.example.zlagodasb.employee;
 
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,30 +21,46 @@ public class EmployeeService {
 
     //OPERATIONS
 
-    public List<Employee> findAllSortedByEmplSurname() {
-        return employeeRepo.findAllSortedByEmplSurname();
+    public List<EmployeeInfo> findAllSortedByEmplSurname() {
+        List<EmployeeInfo> result = new ArrayList<>();
+        for (Employee entity : employeeRepo.findAllSortedByEmplSurname()) {
+            result.add(entity.toInfo());
+        }
+        return result;
     }
 
-    public List<Employee> findCashiersSortedByEmplSurname() {
-        return employeeRepo.findCashiersSortedByEmplSurname();
+    public List<EmployeeInfo> findCashiersSortedByEmplSurname() {
+        List<EmployeeInfo> result = new ArrayList<>();
+        for (Employee entity : employeeRepo.findCashiersSortedByEmplSurname()) {
+            result.add(entity.toInfo());
+        }
+        return result;
     }
 
-    public List<Employee> findAllBySurname(String surname) {
-        return employeeRepo.findAllWithEmplSurnameContains(surname);
+    public List<EmployeeInfo> findAllBySurname(String surname) {
+        List<EmployeeInfo> result = new ArrayList<>();
+        for (Employee entity : employeeRepo.findAllWithEmplSurnameContains(surname)) {
+            result.add(entity.toInfo());
+        }
+        return result;
     }
 
     //DEFAULT OPERATIONS
 
-    public List<Employee> findAll() {
-        return employeeRepo.findAll();
+    public List<EmployeeInfo> findAll() {
+        List<EmployeeInfo> result = new ArrayList<>();
+        for (Employee entity : employeeRepo.findAll()) {
+            result.add(entity.toInfo());
+        }
+        return result;
     }
 
-    public Employee findById(String idEmployee) {
-        return employeeRepo.findById(idEmployee);
+    public EmployeeInfo findById(String idEmployee) {
+        return employeeRepo.findById(idEmployee).toInfo();
     }
 
-    public Employee create(EmployeeModel employeeModel) {
-        return employeeRepo.create(employeeModel.toEntity());
+    public EmployeeInfo create(EmployeeModel employeeModel) {
+        return employeeRepo.create(employeeModel.toEntity()).toInfo();
     }
 
     public void update(EmployeeModel employeeModel) {

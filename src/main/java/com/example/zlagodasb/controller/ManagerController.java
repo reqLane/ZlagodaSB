@@ -9,6 +9,7 @@ import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.customer_card.CustomerCard;
 import com.example.zlagodasb.customer_card.CustomerCardService;
 import com.example.zlagodasb.employee.Employee;
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
@@ -113,7 +114,7 @@ public class ManagerController {
         try {
             if(isNullOrEmpty(data.getEmplPatronymic())) data.setEmplPatronymic(null);
 
-            Employee saved = employeeService.create(data);
+            EmployeeInfo saved = employeeService.create(data);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
@@ -234,7 +235,7 @@ public class ManagerController {
     @PutMapping("/deleteEmployee")
     public ResponseEntity<Boolean> deleteEmployee(@RequestBody Map<String, String> data) {
         try {
-            Employee employee = employeeService.findById(data.get("idEmployee"));
+            EmployeeInfo employee = employeeService.findById(data.get("idEmployee"));
             if(employee == null) throw new Exception("Employee with idEmployee not found");
 
             employeeService.deleteById(employee.getIdEmployee());
@@ -309,9 +310,9 @@ public class ManagerController {
         }
     }
     @GetMapping("/getEmployeeReport")
-    public ResponseEntity<List<Employee>> getEmployeeReport() {
+    public ResponseEntity<List<EmployeeInfo>> getEmployeeReport() {
         try {
-            List<Employee> result = employeeService.findAll();
+            List<EmployeeInfo> result = employeeService.findAll();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -328,9 +329,9 @@ public class ManagerController {
     }
 
     @GetMapping("/getEmployeesSortedBySurname")
-    public ResponseEntity<List<Employee>> getEmployeesSortedBySurname() {
+    public ResponseEntity<List<EmployeeInfo>> getEmployeesSortedBySurname() {
         try {
-            List<Employee> result = employeeService.findAllSortedByEmplSurname();
+            List<EmployeeInfo> result = employeeService.findAllSortedByEmplSurname();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -338,9 +339,9 @@ public class ManagerController {
     }
 
     @GetMapping("/getCashiersSortedBySurname")
-    public ResponseEntity<List<Employee>> getCashiersSortedBySurname() {
+    public ResponseEntity<List<EmployeeInfo>> getCashiersSortedBySurname() {
         try {
-            List<Employee> result = employeeService.findCashiersSortedByEmplSurname();
+            List<EmployeeInfo> result = employeeService.findCashiersSortedByEmplSurname();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -372,9 +373,9 @@ public class ManagerController {
     }
 
     @PostMapping("/getEmployeesBySurname")
-    public ResponseEntity<List<Employee>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<EmployeeInfo>> getEmployeesBySurname(@RequestBody Map<String, String> data) {
         try {
-            List<Employee> result = employeeService.findAllBySurname(data.get("surname"));
+            List<EmployeeInfo> result = employeeService.findAllBySurname(data.get("surname"));
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

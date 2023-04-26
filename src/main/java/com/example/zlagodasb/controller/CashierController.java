@@ -9,7 +9,7 @@ import com.example.zlagodasb.customer_card.CustomerCard;
 import com.example.zlagodasb.customer_card.CustomerCardService;
 import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
-import com.example.zlagodasb.product.Product;
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.sale.SaleService;
@@ -162,10 +162,10 @@ public class CashierController {
     //getStoreProductInfoByUPC mutual
 
     @PostMapping("/getSelfInfo")
-    public ResponseEntity<Employee> getSelfInfo(@RequestBody Map<String, String> data) {
+    public ResponseEntity<EmployeeInfo> getSelfInfo(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
-            Employee result = employeeService.findById(idCashier);
+            EmployeeInfo result = employeeService.findById(idCashier);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(null);

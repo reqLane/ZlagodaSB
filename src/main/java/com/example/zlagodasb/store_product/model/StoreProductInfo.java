@@ -5,15 +5,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @Getter
 @Setter
 @ToString
 public class StoreProductInfo {
-    private BigDecimal sellingPrice;
-    private Integer productsNumber;
+    private String UPC;
     private String productName;
+    private Integer productsNumber;
+    private BigDecimal sellingPrice;
+    private Date expirationDate;
+    private boolean promotionalProduct;
     private String manufacturer;
     private String characteristics;
-    private boolean promotionalProduct;
 }

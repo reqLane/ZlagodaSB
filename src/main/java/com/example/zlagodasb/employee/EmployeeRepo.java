@@ -1,5 +1,6 @@
 package com.example.zlagodasb.employee;
 
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

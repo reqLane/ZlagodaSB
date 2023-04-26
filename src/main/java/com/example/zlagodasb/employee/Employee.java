@@ -1,5 +1,6 @@
 package com.example.zlagodasb.employee;
 
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,4 +27,21 @@ public class Employee {
     private String city;
     private String street;
     private String zipCode;
+
+    public EmployeeInfo toInfo() {
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+        employeeInfo.setIdEmployee(idEmployee);
+        employeeInfo.setEmplSurname(emplSurname);
+        employeeInfo.setEmplName(emplName);
+        employeeInfo.setEmplPatronymic(emplPatronymic);
+        employeeInfo.setEmplRole(emplRole);
+        employeeInfo.setSalary(salary);
+        employeeInfo.setDateOfBirth(dateOfBirth);
+        employeeInfo.setDateOfStart(dateOfStart);
+        employeeInfo.setPhoneNumber(phoneNumber);
+        employeeInfo.setCity(city);
+        employeeInfo.setStreet(street);
+        employeeInfo.setZipCode(zipCode);
+        return employeeInfo;
+    }
 }

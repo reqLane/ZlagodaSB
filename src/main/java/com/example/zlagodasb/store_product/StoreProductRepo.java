@@ -35,7 +35,9 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllInfo() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product";
         return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
@@ -65,7 +67,9 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllSortedByProductsNumber() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.products_number > 0" +
                 " AND Store_Product.expiration_date > CURRENT_DATE()" +
@@ -75,7 +79,9 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllSortedByProductName() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.products_number > 0" +
                 " AND Store_Product.expiration_date > CURRENT_DATE()" +
@@ -85,7 +91,9 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public StoreProductInfo getInfoByUPC(String UPC) {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.UPC = ?";
@@ -100,7 +108,9 @@ public class StoreProductRepo {
         if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
         if(sortBy.equals("products_number")) sortBy += " DESC";
 
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = TRUE" +
@@ -115,7 +125,9 @@ public class StoreProductRepo {
         if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
         if(sortBy.equals("products_number")) sortBy += " DESC";
 
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
+        String sql = "SELECT Store_Product.UPC, Product.product_name, Store_Product.products_number," +
+                " Store_Product.selling_price, Store_Product.expiration_date, Store_Product.promotional_product," +
+                " Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = FALSE" +
@@ -216,12 +228,14 @@ public class StoreProductRepo {
         @Override
         public StoreProductInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
             StoreProductInfo storeProductInfo = new StoreProductInfo();
-            storeProductInfo.setSellingPrice(rs.getBigDecimal("selling_price"));
-            storeProductInfo.setProductsNumber(rs.getInt("products_number"));
+            storeProductInfo.setUPC(rs.getString("UPC"));
             storeProductInfo.setProductName(rs.getString("product_name"));
+            storeProductInfo.setProductsNumber(rs.getInt("products_number"));
+            storeProductInfo.setSellingPrice(rs.getBigDecimal("selling_price"));
+            storeProductInfo.setExpirationDate(rs.getDate("expiration_date"));
+            storeProductInfo.setPromotionalProduct(rs.getBoolean("promotional_product"));
             storeProductInfo.setManufacturer(rs.getString("manufacturer"));
             storeProductInfo.setCharacteristics(rs.getString("characteristics"));
-            storeProductInfo.setPromotionalProduct(rs.getBoolean("promotional_product"));
             return storeProductInfo;
         }
     }
