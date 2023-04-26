@@ -221,6 +221,7 @@ public class StoreProductRepo {
             storeProductInfo.setProductName(rs.getString("product_name"));
             storeProductInfo.setManufacturer(rs.getString("manufacturer"));
             storeProductInfo.setCharacteristics(rs.getString("characteristics"));
+            storeProductInfo.setPromotionalProduct(rs.getBoolean("promotional_product"));
             return storeProductInfo;
         }
     }
