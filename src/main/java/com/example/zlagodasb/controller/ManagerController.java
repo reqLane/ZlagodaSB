@@ -12,6 +12,7 @@ import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
+import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.product.model.ProductModel;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.sale.SaleService;
@@ -290,9 +291,9 @@ public class ManagerController {
         }
     }
     @GetMapping("/getProductReport")
-    public ResponseEntity<List<Product>> getProductReport() {
+    public ResponseEntity<List<ProductInfo>> getProductReport() {
         try {
-            List<Product> result = productService.findAll();
+            List<ProductInfo> result = productService.findAllInfo();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

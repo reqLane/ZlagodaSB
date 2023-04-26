@@ -1,5 +1,6 @@
 package com.example.zlagodasb.product;
 
+import com.example.zlagodasb.product.model.ProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +35,13 @@ public class ProductRepo {
     //OPERATIONS
 
     @Transactional(readOnly=true)
+    public List<ProductInfo> findAllInfo() {
+        String sql = "SELECT Product.id_product, Category.category_name, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Product INNER JOIN Category ON Product.category_number = Category.category_number";
+        return jdbcTemplate.query(sql, new ProductInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)
     public List<Product> findByCategoryNumber(Integer categoryNumber) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE category_number = ?";
@@ -51,18 +59,20 @@ public class ProductRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<Product> findAllSortedByProductName() {
-        String sql = "SELECT * FROM " + tableName +
-                " ORDER BY product_name";
-        return jdbcTemplate.query(sql, mapper);
+    public List<ProductInfo> findAllSortedByProductName() {
+        String sql = "SELECT Product.id_product, Category.category_name, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Product INNER JOIN Category ON Product.category_number = Category.category_number" +
+                " ORDER BY Product.product_name";
+        return jdbcTemplate.query(sql, new ProductInfoRowMapper());
     }
 
     @Transactional(readOnly=true)
-    public List<Product> findAllWithCategoryNumberSortedByName(Integer categoryNumber) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE category_number = ?" +
-                " ORDER BY product_name";
-        return jdbcTemplate.query(sql, mapper, categoryNumber);
+    public List<ProductInfo> findAllWithCategoryNumberSortedByName(Integer categoryNumber) {
+        String sql = "SELECT Product.id_product, Category.category_name, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Product INNER JOIN Category ON Product.category_number = Category.category_number" +
+                " WHERE Product.category_number = ?" +
+                " ORDER BY Product.product_name";
+        return jdbcTemplate.query(sql, new ProductInfoRowMapper(), categoryNumber);
     }
 
     @Transactional(readOnly=true)
@@ -77,10 +87,11 @@ public class ProductRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<Product> findAllByProductName(String productName) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE product_name LIKE ?";
-        return jdbcTemplate.query(sql, mapper, '%' + productName + '%');
+    public List<ProductInfo> findAllByProductName(String productName) {
+        String sql = "SELECT Product.id_product, Category.category_name, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Product INNER JOIN Category ON Product.category_number = Category.category_number" +
+                " WHERE Product.product_name LIKE ?";
+        return jdbcTemplate.query(sql, new ProductInfoRowMapper(), '%' + productName + '%');
     }
 
     //DEFAULT OPERATIONS
@@ -166,6 +177,19 @@ public class ProductRepo {
             product.setManufacturer(rs.getString("manufacturer"));
             product.setCharacteristics(rs.getString("characteristics"));
             return product;
+        }
+    }
+
+    private static class ProductInfoRowMapper implements RowMapper<ProductInfo> {
+        @Override
+        public ProductInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            ProductInfo productInfo = new ProductInfo();
+            productInfo.setIdProduct(rs.getInt("id_product"));
+            productInfo.setCategoryName(rs.getString("category_name"));
+            productInfo.setProductName(rs.getString("product_name"));
+            productInfo.setManufacturer(rs.getString("manufacturer"));
+            productInfo.setCharacteristics(rs.getString("characteristics"));
+            return productInfo;
         }
     }
 }

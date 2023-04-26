@@ -11,6 +11,7 @@ import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
 import com.example.zlagodasb.product.ProductService;
+import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.store_product.StoreProduct;
 import com.example.zlagodasb.store_product.StoreProductService;
 import com.example.zlagodasb.store_product.model.StoreProductInfo;
@@ -186,9 +187,9 @@ public class MutualController {
     //FUNCTIONAL OPERATIONS
 
     @GetMapping("/getProductsSortedByName")
-    public ResponseEntity<List<Product>> getProductsSortedByName() {
+    public ResponseEntity<List<ProductInfo>> getProductsSortedByName() {
         try {
-            List<Product> result = productService.findAllSortedByName();
+            List<ProductInfo> result = productService.findAllSortedByName();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -206,12 +207,12 @@ public class MutualController {
     }
 
     @PostMapping("/getProductsWithCategoryNameSortedByName")
-    public ResponseEntity<List<Product>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<ProductInfo>> getProductsWithCategoryNameSortedByName(@RequestBody Map<String, String> data) {
         try {
             Category category = categoryService.findByCategoryName(data.get("categoryName"));
             if(category == null) throw new Exception("Category with name not found");
 
-            List<Product> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
+            List<ProductInfo> result = productService.findAllWithCategorySortedByName(category.getCategoryNumber());
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

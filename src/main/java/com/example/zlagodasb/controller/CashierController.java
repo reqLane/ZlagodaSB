@@ -11,6 +11,7 @@ import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.EmployeeService;
 import com.example.zlagodasb.product.Product;
 import com.example.zlagodasb.product.ProductService;
+import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.sale.SaleService;
 import com.example.zlagodasb.store_product.StoreProductService;
 import com.example.zlagodasb.store_product.model.StoreProductInfo;
@@ -86,9 +87,9 @@ public class CashierController {
     //getCustomersSortedBySurname mutual
 
     @PostMapping("/getProductsByName")
-    public ResponseEntity<List<Product>> getProductsByName(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<ProductInfo>> getProductsByName(@RequestBody Map<String, String> data) {
         try {
-            List<Product> result = productService.findAllByName(data.get("productName"));
+            List<ProductInfo> result = productService.findAllByName(data.get("productName"));
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

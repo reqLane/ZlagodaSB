@@ -1,5 +1,6 @@
 package com.example.zlagodasb.product;
 
+import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.product.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -21,19 +22,23 @@ public class ProductService {
 
     //OPERATIONS
 
+    public List<ProductInfo> findAllInfo() {
+        return productRepo.findAllInfo();
+    }
+
     public Product findByProductName(String productName) {
         return productRepo.findByProductName(productName);
     }
 
-    public List<Product> findAllSortedByName() {
+    public List<ProductInfo> findAllSortedByName() {
         return productRepo.findAllSortedByProductName();
     }
 
-    public List<Product> findAllByName(String productName) {
+    public List<ProductInfo> findAllByName(String productName) {
         return productRepo.findAllByProductName(productName);
     }
 
-    public List<Product> findAllWithCategorySortedByName(Integer categoryNumber) {
+    public List<ProductInfo> findAllWithCategorySortedByName(Integer categoryNumber) {
         return productRepo.findAllWithCategoryNumberSortedByName(categoryNumber);
     }
 
