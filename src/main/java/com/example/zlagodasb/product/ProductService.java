@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ProductService {
         return productRepo.findAllWithCategoryNumberSortedByName(categoryNumber);
     }
 
-    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Date startDate, Date endDate) {
+    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Timestamp startDate, Timestamp endDate) {
         Long result = productRepo.getTotalAmountOfProductSoldInPeriod(idProduct, startDate, endDate);
 
         return result != null ? result : (long)0;

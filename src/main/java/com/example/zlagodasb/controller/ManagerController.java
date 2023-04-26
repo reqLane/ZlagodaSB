@@ -16,6 +16,7 @@ import com.example.zlagodasb.product.model.ProductModel;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.sale.SaleService;
 import com.example.zlagodasb.store_product.StoreProduct;
+import com.example.zlagodasb.store_product.model.StoreProductInfo;
 import com.example.zlagodasb.store_product.model.StoreProductModel;
 import com.example.zlagodasb.store_product.StoreProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -339,9 +341,9 @@ public class ManagerController {
     //getProductsSortedByName mutual
 
     @GetMapping("/getStoreProductsSortedByAmount")
-    public ResponseEntity<List<StoreProduct>> getStoreProductsSortedByNumber() {
+    public ResponseEntity<List<StoreProductInfo>> getStoreProductsSortedByAmount() {
         try {
-            List<StoreProduct> result = storeProductService.findAllSortedByAmount();
+            List<StoreProductInfo> result = storeProductService.findAllSortedByAmount();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());
@@ -380,8 +382,10 @@ public class ManagerController {
     public ResponseEntity<List<CheckInfo>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
+
             List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -392,8 +396,9 @@ public class ManagerController {
     @PostMapping("/getAllChecksInfoInPeriod")
     public ResponseEntity<List<CheckInfo>> getAllChecksInfoInPeriod(@RequestBody Map<String, String> data) {
         try {
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
+
             List<CheckInfo> result = checkService.getAllChecksInfoInPeriod(startDate, endDate);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -405,8 +410,10 @@ public class ManagerController {
     public ResponseEntity<BigDecimal> getTotalIncomeFromChecksOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
+
             BigDecimal result = checkService.getTotalIncomeFromChecksOfCashierInPeriod(idCashier, startDate, endDate);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -417,8 +424,9 @@ public class ManagerController {
     @PostMapping("/getTotalIncomeFromChecksInPeriod")
     public ResponseEntity<BigDecimal> getTotalIncomeFromChecksInPeriod(@RequestBody Map<String, String> data) {
         try {
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
+
             BigDecimal result = checkService.getTotalIncomeFromChecksInPeriod(startDate, endDate);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -430,8 +438,9 @@ public class ManagerController {
     public ResponseEntity<Long> getTotalAmountOfProductSoldInPeriod(@RequestBody Map<String, String> data) {
         try {
             String productName = data.get("productName");
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
 
             Product product = productService.findByProductName(productName);
             if(product == null) throw new Exception("Product with name not found");

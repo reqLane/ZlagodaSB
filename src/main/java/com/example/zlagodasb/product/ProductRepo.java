@@ -66,7 +66,7 @@ public class ProductRepo {
     }
 
     @Transactional(readOnly=true)
-    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Date startDate, Date endDate) {
+    public Long getTotalAmountOfProductSoldInPeriod(Integer idProduct, Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT SUM(COALESCE(Sale.product_number))" +
                 " FROM Product INNER JOIN Store_Product ON Product.id_product = Store_Product.id_product" +
                 " INNER JOIN Sale ON Store_Product.UPC = Sale.UPC" +

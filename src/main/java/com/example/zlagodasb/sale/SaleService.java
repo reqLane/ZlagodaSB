@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 
+import static com.example.zlagodasb.util.Utils.isExpired;
+
 @Service
 public class SaleService {
     private final SaleRepo saleRepo;
@@ -42,6 +44,10 @@ public class SaleService {
         StoreProduct storeProduct = storeProductService.findById(sale.getUPC());
         if(storeProduct == null)
             throw new Exception("StoreProduct with UPC not found");
+        if(storeProduct.getProductsNumber() <= 0)
+            throw new Exception("StoreProduct with UPC not present in shop");
+        if(isExpired(storeProduct.getExpirationDate()))
+            throw new Exception("StoreProduct with UPC was expired and taken off");
 
         Integer storedNumber = storeProduct.getProductsNumber();
         Integer expectedNumber = sale.getProductNumber();

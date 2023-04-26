@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -110,10 +111,12 @@ public class CashierController {
     public ResponseEntity<List<CheckInfo>> getAllChecksMadeToday(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
-            Date now = new Date(Calendar.getInstance().getTime().getTime());
+
+            Timestamp now = new Timestamp(System.currentTimeMillis());
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DATE, -1);
-            Date yesterday = new Date(calendar.getTime().getTime());
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            Timestamp yesterday = new Timestamp(calendar.getTimeInMillis());
+
             List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, yesterday, now);
             for (CheckInfo checkInfo : result)
                 checkInfo.setSalesInfo(null);
@@ -127,8 +130,10 @@ public class CashierController {
     public ResponseEntity<List<CheckInfo>> getAllChecksMadeInPeriod(@RequestBody Map<String, String> data) {
         try {
             String idCashier = data.get("idCashier");
-            Date startDate = Date.valueOf(data.get("startDate"));
-            Date endDate = Date.valueOf(data.get("endDate"));
+
+            Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
+            Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());
+
             List<CheckInfo> result = checkService.getChecksInfoOfCashierInPeriod(idCashier, startDate, endDate);
             for (CheckInfo checkInfo : result)
                 checkInfo.setSalesInfo(null);

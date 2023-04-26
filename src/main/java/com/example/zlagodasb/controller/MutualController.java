@@ -88,6 +88,19 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
+    @GetMapping("/getStoreProductListPresent")
+    public ResponseEntity<List<String>> getStoreProductListPresent() {
+        try {
+            List<StoreProduct> storeProductList = storeProductService.findAllPresent();
+            List<String> entries = new ArrayList<>();
+            for (StoreProduct storeProduct : storeProductList) {
+                entries.add(storeProduct.getUPC());
+            }
+            return ResponseEntity.ok(entries);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
     @GetMapping("/getEmployeeList")
     public ResponseEntity<List<String>> getEmployeeList() {
         try {

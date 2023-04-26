@@ -7,8 +7,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import static com.example.zlagodasb.util.Utils.isExpired;
 
 @Service
 public class StoreProductService {
@@ -21,7 +22,11 @@ public class StoreProductService {
 
     //OPERATIONS
 
-    public List<StoreProduct> findAllSortedByAmount() {
+    public List<StoreProduct> findAllPresent() {
+        return storeProductRepo.findAllPresent();
+    }
+
+    public List<StoreProductInfo> findAllSortedByAmount() {
         return storeProductRepo.findAllSortedByProductsNumber();
     }
 
@@ -51,7 +56,10 @@ public class StoreProductService {
         return storeProductRepo.findById(UPC);
     }
 
-    public StoreProduct create(StoreProductModel storeProductModel) {
+    public StoreProduct create(StoreProductModel storeProductModel) throws Exception {
+        if(isExpired(storeProductModel.getExpirationDate()))
+            throw new Exception("Can't create StoreProduct which is expired already");
+
         StoreProduct entity = storeProductModel.toEntity();
 
         List<StoreProduct> similarStoreProducts = storeProductRepo.findByIdProduct(entity.getIdProduct());

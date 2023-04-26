@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS Checks(
     check_number VARCHAR(10) NOT NULL,
     id_employee VARCHAR(10) NOT NULL,
     card_number VARCHAR(13) NULL,
-    print_date DATETIME NOT NULL,
+    print_date TIMESTAMP NOT NULL,
     sum_total DECIMAL(13,4) NOT NULL CHECK (sum_total >= 0),
     vat DECIMAL(13,4) NOT NULL CHECK (vat >= 0),
     PRIMARY KEY (check_number),

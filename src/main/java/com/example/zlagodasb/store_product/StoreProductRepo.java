@@ -34,6 +34,14 @@ public class StoreProductRepo {
     //OPERATIONS
 
     @Transactional(readOnly=true)
+    public List<StoreProduct> findAllPresent() {
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE products_number > 0" +
+                " AND expiration_date > CURRENT_DATE()";
+        return jdbcTemplate.query(sql, mapper);
+    }
+
+    @Transactional(readOnly=true)
     public List<StoreProduct> findByIdProduct(Integer idProduct) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE id_product = ?";
@@ -41,16 +49,21 @@ public class StoreProductRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<StoreProduct> findAllSortedByProductsNumber() {
-        String sql = "SELECT * FROM " + tableName +
-                " ORDER BY products_number";
-        return jdbcTemplate.query(sql, mapper);
+    public List<StoreProductInfo> findAllSortedByProductsNumber() {
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
+                " WHERE Store_Product.products_number > 0" +
+                " AND Store_Product.expiration_date > CURRENT_DATE()" +
+                " ORDER BY Store_Product.products_number";
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllSortedByProductName() {
         String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
+                " WHERE Store_Product.products_number > 0" +
+                " AND Store_Product.expiration_date > CURRENT_DATE()" +
                 " ORDER BY Product.product_name";
         return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
@@ -75,6 +88,8 @@ public class StoreProductRepo {
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = TRUE" +
+                " AND products_number > 0" +
+                " AND expiration_date > CURRENT_DATE()" +
                 " ORDER BY " + sortBy;
         return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
@@ -87,6 +102,8 @@ public class StoreProductRepo {
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = FALSE" +
+                " AND products_number > 0" +
+                " AND expiration_date > CURRENT_DATE()" +
                 " ORDER BY " + sortBy;
         return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }

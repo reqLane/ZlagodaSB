@@ -51,7 +51,7 @@ public class CheckRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+    public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE id_employee = ?" +
                 " AND print_date BETWEEN ? AND ?";
@@ -59,7 +59,7 @@ public class CheckRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<CheckInfo> getAllChecksInfoInPeriod(Date startDate, Date endDate) {
+    public List<CheckInfo> getAllChecksInfoInPeriod(Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE print_date BETWEEN ? AND ?";
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), startDate, endDate);
@@ -76,7 +76,7 @@ public class CheckRepo {
     }
 
     @Transactional(readOnly=true)
-    public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+    public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT SUM(COALESCE(sum_total))" +
                 " FROM " + tableName +
                 " WHERE id_employee = ?" +
@@ -85,7 +85,7 @@ public class CheckRepo {
     }
 
     @Transactional(readOnly=true)
-    public BigDecimal getTotalIncomeFromChecksInPeriod(Date startDate, Date endDate) {
+    public BigDecimal getTotalIncomeFromChecksInPeriod(Timestamp startDate, Timestamp endDate) {
         String sql = "SELECT SUM(COALESCE(sum_total))" +
                 " FROM " + tableName +
                 " WHERE print_date BETWEEN ? AND ?";
@@ -122,7 +122,7 @@ public class CheckRepo {
             ps.setString(1, check.getCheckNumber());
             ps.setString(2, check.getIdEmployee());
             ps.setString(3, check.getCardNumber());
-            ps.setDate(4, check.getPrintDate());
+            ps.setTimestamp(4, check.getPrintDate());
             ps.setBigDecimal(5, check.getSumTotal());
             ps.setBigDecimal(6, check.getVat());
             return ps;
@@ -172,7 +172,7 @@ public class CheckRepo {
             check.setCheckNumber(rs.getString("check_number"));
             check.setIdEmployee(rs.getString("id_employee"));
             check.setCardNumber(rs.getString("card_number"));
-            check.setPrintDate(rs.getDate("print_date"));
+            check.setPrintDate(rs.getTimestamp("print_date"));
             check.setSumTotal(rs.getBigDecimal("sum_total"));
             check.setVat(rs.getBigDecimal("vat"));
             return check;
@@ -186,7 +186,7 @@ public class CheckRepo {
             checkInfo.setCheckNumber(rs.getString("check_number"));
             checkInfo.setIdEmployee(rs.getString("id_employee"));
             checkInfo.setCardNumber(rs.getString("card_number"));
-            checkInfo.setPrintDate(rs.getDate("print_date"));
+            checkInfo.setPrintDate(rs.getTimestamp("print_date"));
             checkInfo.setSumTotal(rs.getBigDecimal("sum_total"));
             checkInfo.setVat(rs.getBigDecimal("vat"));
             return checkInfo;

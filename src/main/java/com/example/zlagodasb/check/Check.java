@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class Check {
     private String checkNumber;
     private String idEmployee;
     private String cardNumber;
-    private Date printDate;
+    private Timestamp printDate;
     private BigDecimal sumTotal;
     private BigDecimal vat;
 }

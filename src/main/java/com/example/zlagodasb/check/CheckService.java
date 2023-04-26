@@ -12,8 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.Calendar;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -35,10 +34,10 @@ public class CheckService {
 
     //OPERATIONS
 
-    public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+    public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         if(startDate.compareTo(endDate) > 0) {
-            Date tmp = new Date(startDate.getTime());
-            startDate = new Date(endDate.getTime());
+            Timestamp tmp = new Timestamp(startDate.getTime());
+            startDate = new Timestamp(endDate.getTime());
             endDate = tmp;
         }
 
@@ -50,10 +49,10 @@ public class CheckService {
         return result;
     }
 
-    public List<CheckInfo> getAllChecksInfoInPeriod(Date startDate, Date endDate) {
+    public List<CheckInfo> getAllChecksInfoInPeriod(Timestamp startDate, Timestamp endDate) {
         if(startDate.compareTo(endDate) > 0) {
-            Date tmp = new Date(startDate.getTime());
-            startDate = new Date(endDate.getTime());
+            Timestamp tmp = new Timestamp(startDate.getTime());
+            startDate = new Timestamp(endDate.getTime());
             endDate = tmp;
         }
 
@@ -75,13 +74,13 @@ public class CheckService {
         return result;
     }
 
-    public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Date startDate, Date endDate) {
+    public BigDecimal getTotalIncomeFromChecksOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
         BigDecimal result = checkRepo.getTotalIncomeFromChecksOfCashierInPeriod(idCashier, startDate, endDate);
 
         return result != null ? result : BigDecimal.ZERO;
     }
 
-    public BigDecimal getTotalIncomeFromChecksInPeriod(Date startDate, Date endDate) {
+    public BigDecimal getTotalIncomeFromChecksInPeriod(Timestamp startDate, Timestamp endDate) {
         BigDecimal result = checkRepo.getTotalIncomeFromChecksInPeriod(startDate, endDate);
 
         return result != null ? result : BigDecimal.ZERO;
@@ -107,7 +106,7 @@ public class CheckService {
         String checkNumber = uuid.substring(0, 4) + uuid.substring(9, 11) + uuid.substring(14, 16) + uuid.substring(19, 21) + uuid.substring(24, 27);
         entity.setCheckNumber(checkNumber);
 
-        entity.setPrintDate(new Date(Calendar.getInstance().getTime().getTime()));
+        entity.setPrintDate(new Timestamp(System.currentTimeMillis()));
 
         double sumTotal = 0;
         for (SaleModel saleModel : checkModel.getSaleModels()) {
