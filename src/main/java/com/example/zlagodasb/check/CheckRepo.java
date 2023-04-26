@@ -1,7 +1,6 @@
 package com.example.zlagodasb.check;
 
 import com.example.zlagodasb.check.model.CheckInfo;
-import com.example.zlagodasb.sale.SaleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -58,23 +57,35 @@ public class CheckRepo {
 
     @Transactional(readOnly=true)
     public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE id_employee = ?" +
-                " AND print_date BETWEEN ? AND ?";
+        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+                " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
+                " Check.print_date, Check.sum_total, Check.vat" +
+                " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
+                " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
+                " WHERE Checks.id_employee = ?" +
+                " AND Checks.print_date BETWEEN ? AND ?";
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), idCashier, startDate, endDate);
     }
 
     @Transactional(readOnly=true)
     public List<CheckInfo> getAllChecksInfoInPeriod(Timestamp startDate, Timestamp endDate) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE print_date BETWEEN ? AND ?";
+        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+                " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
+                " Check.print_date, Check.sum_total, Check.vat" +
+                " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
+                " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
+                " WHERE Check.print_date BETWEEN ? AND ?";
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), startDate, endDate);
     }
 
     @Transactional(readOnly=true)//distinct
     public CheckInfo getCheckInfoByCheckNumber(String checkNumber) {
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE check_number = ?";
+        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+                " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
+                " Check.print_date, Check.sum_total, Check.vat" +
+                " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
+                " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
+                " WHERE Check.check_number = ?";
         List<CheckInfo> list = jdbcTemplate.query(sql, new CheckInfoRowMapper(), checkNumber);
         if(list.isEmpty()) return null;
 
@@ -190,8 +201,12 @@ public class CheckRepo {
         public CheckInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
             CheckInfo checkInfo = new CheckInfo();
             checkInfo.setCheckNumber(rs.getString("check_number"));
-            checkInfo.setIdEmployee(rs.getString("id_employee"));
-            checkInfo.setCardNumber(rs.getString("card_number"));
+            checkInfo.setEmployeeFullName(rs.getString("empl_surname") +
+                    " " + rs.getString("empl_name") +
+                    (rs.getString("empl_patronymic") != null ? (" " + rs.getString("empl_patronymic")) : ""));
+            checkInfo.setCustomerFullName(rs.getString("cust_surname") +
+                    " " + rs.getString("cust_name") +
+                    (rs.getString("cust_patronymic") != null ? (" " + rs.getString("cust_patronymic")) : ""));
             checkInfo.setPrintDate(rs.getTimestamp("print_date"));
             checkInfo.setSumTotal(rs.getBigDecimal("sum_total"));
             checkInfo.setVat(rs.getBigDecimal("vat"));

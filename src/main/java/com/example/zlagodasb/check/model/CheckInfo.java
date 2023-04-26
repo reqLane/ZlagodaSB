@@ -15,8 +15,8 @@ import java.util.List;
 @ToString
 public class CheckInfo {
     private String checkNumber;
-    private String idEmployee;
-    private String cardNumber;
+    private String employeeFullName;
+    private String customerFullName;
     private Timestamp printDate;
     private BigDecimal sumTotal;
     private BigDecimal vat;
