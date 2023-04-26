@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS Store_Product(
 
 CREATE TABLE IF NOT EXISTS Employee(
     id_employee VARCHAR(10) NOT NULL,
-    password VARCHAR(16) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     empl_surname VARCHAR(50) NOT NULL,
     empl_name VARCHAR(50) NOT NULL,
     empl_patronymic VARCHAR(50) NULL,

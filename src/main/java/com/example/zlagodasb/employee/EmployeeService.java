@@ -4,6 +4,7 @@ import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,10 +12,13 @@ import java.util.*;
 @Service
 public class EmployeeService {
     private final EmployeeRepo employeeRepo;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public EmployeeService(EmployeeRepo employeeRepo) {
+    public EmployeeService(EmployeeRepo employeeRepo,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.employeeRepo = employeeRepo;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     //AUTHENTICATION
@@ -27,7 +31,7 @@ public class EmployeeService {
         if(!idEmployee.equals(expectedIdEmployee)) throw new Exception("idEmployee doesn't match idEmployee found (idk how you received this)");
 
         String expectedPassword = entity.getPassword();
-        if(!password.equals(expectedPassword)) throw new Exception("Password is incorrect");
+        if(!bCryptPasswordEncoder.matches(password, expectedPassword)) throw new Exception("Password is incorrect");
 
         Map<String, String> response = new HashMap<>();
         response.put("authenticated", "true");
@@ -78,12 +82,28 @@ public class EmployeeService {
         return employeeRepo.findById(idEmployee).toInfo();
     }
 
-    public EmployeeInfo create(EmployeeModel employeeModel) {
-        return employeeRepo.create(employeeModel.toEntity()).toInfo();
+    public EmployeeInfo create(EmployeeModel employeeModel) throws Exception {
+        if(employeeModel.getPassword().length() > 16)
+            throw new Exception("Password can't be longer than 16 symbols");
+
+        Employee entity = employeeModel.toEntity();
+
+        String encryptedPassword = bCryptPasswordEncoder.encode(entity.getPassword());
+        entity.setPassword(encryptedPassword);
+
+        return employeeRepo.create(entity).toInfo();
     }
 
-    public void update(EmployeeModel employeeModel) {
-        employeeRepo.update(employeeModel.toEntity());
+    public void update(EmployeeModel employeeModel) throws Exception {
+        if(employeeModel.getPassword().length() > 16)
+            throw new Exception("Password can't be longer than 16 symbols");
+
+        Employee entity = employeeModel.toEntity();
+
+        String encryptedPassword = bCryptPasswordEncoder.encode(entity.getPassword());
+        entity.setPassword(encryptedPassword);
+
+        employeeRepo.update(entity);
     }
 
     public void deleteById(String idEmployee){
