@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
+import static com.example.zlagodasb.util.Utils.parseIdFrom;
 
 @RestController
 @RequestMapping("/general")
@@ -99,10 +100,10 @@ public class MutualController {
     @GetMapping("/getStoreProductList")
     public ResponseEntity<List<String>> getStoreProductList() {
         try {
-            List<StoreProduct> storeProductList = storeProductService.findAll();
             List<String> entries = new ArrayList<>();
-            for (StoreProduct storeProduct : storeProductList) {
-                entries.add(storeProduct.getUPC());
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllInfo()) {
+                entries.add(storeProductInfo.getProductName() +
+                        '(' + storeProductInfo.getUPC() + ')');
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
@@ -112,10 +113,10 @@ public class MutualController {
     @GetMapping("/getStoreProductListPresent")
     public ResponseEntity<List<String>> getStoreProductListPresent() {
         try {
-            List<StoreProduct> storeProductList = storeProductService.findAllPresent();
             List<String> entries = new ArrayList<>();
-            for (StoreProduct storeProduct : storeProductList) {
-                entries.add(storeProduct.getUPC());
+            for (StoreProductInfo storeProductInfo : storeProductService.findAllPresentInfo()) {
+                entries.add(storeProductInfo.getProductName() +
+                        '(' + storeProductInfo.getUPC() + ')');
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
@@ -125,10 +126,10 @@ public class MutualController {
     @GetMapping("/getEmployeeList")
     public ResponseEntity<List<String>> getEmployeeList() {
         try {
-            List<EmployeeInfo> employeeList = employeeService.findAll();
             List<String> entries = new ArrayList<>();
-            for (EmployeeInfo employeeInfo : employeeList) {
-                entries.add(employeeInfo.getIdEmployee());
+            for (EmployeeInfo employeeInfo : employeeService.findAll()) {
+                entries.add(employeeInfo.getEmplFullName() +
+                        '(' + employeeInfo.getIdEmployee() + ')');
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
@@ -141,7 +142,8 @@ public class MutualController {
             List<EmployeeInfo> employeeList = employeeService.findCashiersSortedByEmplSurname();
             List<String> entries = new ArrayList<>();
             for (EmployeeInfo employeeInfo : employeeList) {
-                entries.add(employeeInfo.getIdEmployee());
+                entries.add(employeeInfo.getEmplFullName() +
+                        '(' + employeeInfo.getIdEmployee() + ')');
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
@@ -154,7 +156,11 @@ public class MutualController {
             List<CustomerCard> customerCardList = customerCardService.findAll();
             List<String> entries = new ArrayList<>();
             for (CustomerCard customerCard : customerCardList) {
-                entries.add(customerCard.getCardNumber());
+                String surname = customerCard.getCustSurname();
+                String name = customerCard.getCustName();
+                String patronymic = customerCard.getCustPatronymic();
+                entries.add(surname + " " + name + (patronymic != null ? (" " + patronymic) : "") +
+                        '(' + customerCard.getCardNumber() + ')');
             }
             return ResponseEntity.ok(entries);
         } catch (Exception e) {
@@ -201,7 +207,7 @@ public class MutualController {
             if(isNullOrEmpty(data.get("zipCode"))) data.put("zipCode", null);
 
             CustomerCard toUpdate = new CustomerCard();
-            toUpdate.setCardNumber(data.get("cardNumber"));
+            toUpdate.setCardNumber(parseIdFrom(data.get("cardNumber")));
             toUpdate.setCustSurname(data.get("custSurname"));
             toUpdate.setCustName(data.get("custName"));
             toUpdate.setCustPatronymic(data.get("custPatronymic"));
@@ -264,7 +270,7 @@ public class MutualController {
     @PostMapping("/getStoreProductInfoByUPC")
     public ResponseEntity<Map<String, Object>> getStoreProductInfoByUPC(@RequestBody Map<String, String> data) {
         try {
-            StoreProductInfo result = storeProductService.getInfoByUPC(data.get("UPC"));
+            StoreProductInfo result = storeProductService.getInfoByUPC(parseIdFrom(data.get("UPC")));
             return ResponseEntity.ok(result.toMap());
         } catch (Exception e) {
             return ResponseEntity.ok(null);

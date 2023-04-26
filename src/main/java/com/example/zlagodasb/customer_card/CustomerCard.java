@@ -26,7 +26,7 @@ public class CustomerCard {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("Card ID", cardNumber);
-        map.put("Name", custSurname + " " + custName + " " + custPatronymic);
+        map.put("Name", custSurname + " " + custName + (custPatronymic != null ? (" " + custPatronymic) : ""));
         map.put("Phone", phoneNumber);
         map.put("City", city);
         map.put("Street", street);

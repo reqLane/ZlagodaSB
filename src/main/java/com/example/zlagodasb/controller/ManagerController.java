@@ -8,7 +8,6 @@ import com.example.zlagodasb.check.CheckService;
 import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.customer_card.CustomerCard;
 import com.example.zlagodasb.customer_card.CustomerCardService;
-import com.example.zlagodasb.employee.Employee;
 import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import com.example.zlagodasb.employee.EmployeeService;
@@ -33,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
+import static com.example.zlagodasb.util.Utils.parseIdFrom;
 
 @RestController
 @RequestMapping("/manager")
@@ -163,7 +163,7 @@ public class ManagerController {
             if(product == null) throw new Exception("Product with name not found");
 
             StoreProduct toUpdate = new StoreProduct();
-            toUpdate.setUPC(data.get("UPC"));
+            toUpdate.setUPC(parseIdFrom(data.get("UPC")));
             toUpdate.setIdProduct(product.getIdProduct());
             toUpdate.setSellingPrice(BigDecimal.valueOf(Double.parseDouble(data.get("sellingPrice"))));
             toUpdate.setProductsNumber(Integer.parseInt(data.get("productsNumber")));
@@ -179,6 +179,8 @@ public class ManagerController {
     public ResponseEntity<Boolean> updateEmployee(@RequestBody EmployeeModel data) {
         try {
             if(isNullOrEmpty(data.getEmplPatronymic())) data.setEmplPatronymic(null);
+
+            data.setIdEmployee(parseIdFrom(data.getIdEmployee()));
 
             employeeService.update(data);
             return ResponseEntity.ok(true);
@@ -223,7 +225,7 @@ public class ManagerController {
     @PutMapping("/deleteStoreProduct")
     public ResponseEntity<Boolean> deleteStoreProduct(@RequestBody Map<String, String> data) {
         try {
-            StoreProduct storeProduct = storeProductService.findById(data.get("UPC"));
+            StoreProduct storeProduct = storeProductService.findById(parseIdFrom(data.get("UPC")));
             if(storeProduct == null) throw new Exception("StoreProduct with UPC not found");
 
             storeProductService.deleteById(storeProduct.getUPC());
@@ -235,7 +237,7 @@ public class ManagerController {
     @PutMapping("/deleteEmployee")
     public ResponseEntity<Boolean> deleteEmployee(@RequestBody Map<String, String> data) {
         try {
-            EmployeeInfo employee = employeeService.findById(data.get("idEmployee"));
+            EmployeeInfo employee = employeeService.findById(parseIdFrom(data.get("idEmployee")));
             if(employee == null) throw new Exception("Employee with idEmployee not found");
 
             employeeService.deleteById(employee.getIdEmployee());
@@ -247,7 +249,7 @@ public class ManagerController {
     @PutMapping("/deleteCustomerCard")
     public ResponseEntity<Boolean> deleteCustomerCard(@RequestBody Map<String, String> data) {
         try {
-            CustomerCard customerCard = customerCardService.findById(data.get("cardNumber"));
+            CustomerCard customerCard = customerCardService.findById(parseIdFrom(data.get("cardNumber")));
             if(customerCard == null) throw new Exception("CustomerCard with cardNumber not found");
 
             customerCardService.deleteById(customerCard.getCardNumber());
@@ -436,7 +438,7 @@ public class ManagerController {
     @PostMapping("/getChecksInfoOfCashierInPeriod")
     public ResponseEntity<List<Map<String, Object>>> getChecksInfoOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
-            String idCashier = data.get("idCashier");
+            String idCashier = parseIdFrom(data.get("idCashier"));
 
             Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
             Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());

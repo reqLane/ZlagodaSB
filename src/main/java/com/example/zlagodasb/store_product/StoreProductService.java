@@ -36,7 +36,7 @@ public class StoreProductService {
         }
     }
 
-    public List<StoreProduct> findAllPresent() {
+    public List<StoreProductInfo> findAllPresentInfo() {
         return storeProductRepo.findAllPresent();
     }
 

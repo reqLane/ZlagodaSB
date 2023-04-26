@@ -31,9 +31,7 @@ public class Employee {
     public EmployeeInfo toInfo() {
         EmployeeInfo employeeInfo = new EmployeeInfo();
         employeeInfo.setIdEmployee(idEmployee);
-        employeeInfo.setEmplSurname(emplSurname);
-        employeeInfo.setEmplName(emplName);
-        employeeInfo.setEmplPatronymic(emplPatronymic);
+        employeeInfo.setEmplFullName(emplSurname + " " + emplName + (emplPatronymic != null ? (" " + emplPatronymic) : ""));
         employeeInfo.setEmplRole(emplRole);
         employeeInfo.setSalary(salary);
         employeeInfo.setDateOfBirth(dateOfBirth);

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
+import static com.example.zlagodasb.util.Utils.parseIdFrom;
 
 @RestController
 @RequestMapping("/cashier")

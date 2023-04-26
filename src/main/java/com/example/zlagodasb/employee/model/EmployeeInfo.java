@@ -14,9 +14,7 @@ import java.util.Map;
 @ToString
 public class EmployeeInfo {
     private String idEmployee;
-    private String emplSurname;
-    private String emplName;
-    private String emplPatronymic;
+    private String emplFullName;
     private String emplRole;
     private BigDecimal salary;
     private Date dateOfBirth;
@@ -29,7 +27,7 @@ public class EmployeeInfo {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("Employee ID", idEmployee);
-        map.put("Name", emplSurname + " " + emplName + " " + emplPatronymic);
+        map.put("Name", emplFullName);
         map.put("Role", emplRole);
         map.put("Salary", salary);
         map.put("Date of birth", dateOfBirth);
