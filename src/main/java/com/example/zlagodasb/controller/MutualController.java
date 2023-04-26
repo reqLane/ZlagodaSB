@@ -135,6 +135,19 @@ public class MutualController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
+    @GetMapping("/getCashiersList")
+    public ResponseEntity<List<String>> getCashiersList() {
+        try {
+            List<EmployeeInfo> employeeList = employeeService.findCashiersSortedByEmplSurname();
+            List<String> entries = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeList) {
+                entries.add(employeeInfo.getIdEmployee());
+            }
+            return ResponseEntity.ok(entries);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
     @GetMapping("/getCustomerCardList")
     public ResponseEntity<List<String>> getCustomerCardList() {
         try {
