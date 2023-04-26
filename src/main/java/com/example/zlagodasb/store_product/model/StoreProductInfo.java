@@ -15,4 +15,5 @@ public class StoreProductInfo {
     private String productName;
     private String manufacturer;
     private String characteristics;
+    private boolean promotionalProduct;
 }

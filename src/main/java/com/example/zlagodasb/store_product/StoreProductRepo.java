@@ -35,7 +35,7 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllInfo() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product";
         return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
     }
@@ -65,7 +65,7 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllSortedByProductsNumber() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.products_number > 0" +
                 " AND Store_Product.expiration_date > CURRENT_DATE()" +
@@ -75,7 +75,7 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public List<StoreProductInfo> findAllSortedByProductName() {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.products_number > 0" +
                 " AND Store_Product.expiration_date > CURRENT_DATE()" +
@@ -85,7 +85,7 @@ public class StoreProductRepo {
 
     @Transactional(readOnly=true)
     public StoreProductInfo getInfoByUPC(String UPC) {
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.UPC = ?";
@@ -100,7 +100,7 @@ public class StoreProductRepo {
         if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
         if(sortBy.equals("products_number")) sortBy += " DESC";
 
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = TRUE" +
@@ -115,7 +115,7 @@ public class StoreProductRepo {
         if(!sortBy.equals("products_number") && !sortBy.equals("product_name")) sortBy = "product_name";
         if(sortBy.equals("products_number")) sortBy += " DESC";
 
-        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics, Store_Product.promotional_product" +
                 " FROM Store_Product INNER JOIN Product" +
                 " ON Store_Product.id_product = Product.id_product" +
                 " WHERE Store_Product.promotional_product = FALSE" +
