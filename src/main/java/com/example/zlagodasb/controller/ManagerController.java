@@ -300,9 +300,9 @@ public class ManagerController {
         }
     }
     @GetMapping("/getStoreProductReport")
-    public ResponseEntity<List<StoreProduct>> getStoreProductReport() {
+    public ResponseEntity<List<StoreProductInfo>> getStoreProductReport() {
         try {
-            List<StoreProduct> result = storeProductService.findAll();
+            List<StoreProductInfo> result = storeProductService.findAllInfo();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.ok(new ArrayList<>());

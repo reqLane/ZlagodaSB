@@ -22,6 +22,10 @@ public class StoreProductService {
 
     //OPERATIONS
 
+    public List<StoreProductInfo> findAllInfo() {
+        return storeProductRepo.findAllInfo();
+    }
+
     public void updatePromoList() {
         for (StoreProduct storeProduct : storeProductRepo.findAllToBecomePromo()) {
             if(!storeProduct.isPromotionalProduct()) {

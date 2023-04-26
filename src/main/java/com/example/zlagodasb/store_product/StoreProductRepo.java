@@ -34,6 +34,13 @@ public class StoreProductRepo {
     //OPERATIONS
 
     @Transactional(readOnly=true)
+    public List<StoreProductInfo> findAllInfo() {
+        String sql = "SELECT Store_Product.selling_price, Store_Product.products_number, Product.product_name, Product.manufacturer, Product.characteristics" +
+                " FROM Store_Product INNER JOIN Product ON Store_Product.id_product = Product.id_product";
+        return jdbcTemplate.query(sql, new StoreProductInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)
     public List<StoreProduct> findAllPresent() {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE products_number > 0" +
@@ -51,7 +58,7 @@ public class StoreProductRepo {
     @Transactional(readOnly=true)
     public List<StoreProduct> findAllToBecomePromo() {
         String sql = "SELECT * FROM " + tableName +
-                " WHERE CURRENT_DATE() >= DATEADD('DAY', 2, expiration_date)" +
+                " WHERE CURRENT_DATE() >= DATEADD('DAY', -2, expiration_date)" +
                 " AND promotional_product = FALSE";
         return jdbcTemplate.query(sql, mapper);
     }
