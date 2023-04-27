@@ -74,7 +74,7 @@ public class CheckRepo {
                 " Checks.print_date, Checks.sum_total, Checks.vat" +
                 " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
                 " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
-                " WHERE Check.print_date BETWEEN ? AND ?";
+                " WHERE Checks.print_date BETWEEN ? AND ?";
         return jdbcTemplate.query(sql, new CheckInfoRowMapper(), startDate, endDate);
     }
 
@@ -85,7 +85,7 @@ public class CheckRepo {
                 " Checks.print_date, Checks.sum_total, Checks.vat" +
                 " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
                 " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
-                " WHERE Check.check_number = ?";
+                " WHERE Checks.check_number = ?";
         List<CheckInfo> list = jdbcTemplate.query(sql, new CheckInfoRowMapper(), checkNumber);
         if(list.isEmpty()) return null;
 
