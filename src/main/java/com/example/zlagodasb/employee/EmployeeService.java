@@ -68,6 +68,14 @@ public class EmployeeService {
         return result;
     }
 
+    public List<EmployeeInfo> getCashiersWhoSoldMoreThanAverage() {
+        return employeeRepo.getCashiersWhoSoldMoreThanAverage();
+    }
+
+    public List<EmployeeInfo> getCashiersWhoSoldAllProducts() {
+        return employeeRepo.getCashiersWhoSoldAllProducts();
+    }
+
     //DEFAULT OPERATIONS
 
     public List<EmployeeInfo> findAll() {
@@ -105,6 +113,7 @@ public class EmployeeService {
 
         employeeRepo.update(entity);
     }
+
 
     public void deleteById(String idEmployee){
         employeeRepo.deleteById(idEmployee);

@@ -56,6 +56,38 @@ public class EmployeeRepo {
         return jdbcTemplate.query(sql, mapper, '%' + surname + '%');
     }
 
+    @Transactional(readOnly=true)
+    public List<EmployeeInfo> getCashiersWhoSoldMoreThanAverage() {
+        String sql = "SELECT EM.id_employee, EM.empl_surname, EM.empl_name, EM.empl_patronymic, EM.empl_role," +
+                " EM.salary, EM.date_of_birth, EM.date_of_start, EM.phone_number, EM.city, EM.street, EM.zip_code, SUM(CS.sum_total) AS sold_total" +
+                " FROM Employee EM INNER JOIN Checks CS ON EM.id_employee = CS.id_employee" +
+                " WHERE EM.empl_role = 'Cashier'" +
+                " GROUP BY EM.id_employee" +
+                " HAVING SUM(CS.sum_total) > (SELECT AVG(sold_total) AS sold_avg" +
+                " FROM (SELECT SUM(sum_total) AS sold_total" +
+                " FROM Checks" +
+                " GROUP BY id_employee))";
+        return jdbcTemplate.query(sql, new EmployeeInfoRowMapper());
+    }
+
+    @Transactional(readOnly=true)
+    public List<EmployeeInfo> getCashiersWhoSoldAllProducts() {
+        String sql = "SELECT EM.id_employee, EM.empl_surname, EM.empl_name, EM.empl_patronymic, EM.empl_role," +
+                " EM.salary, EM.date_of_birth, EM.date_of_start, EM.phone_number, EM.city, EM.street, EM.zip_code" +
+                " FROM Employee EM" +
+                " WHERE NOT EXISTS (SELECT *" +
+                " FROM Product P" +
+                " WHERE NOT EXISTS (SELECT *" +
+                " FROM Product PR INNER JOIN Store_Product SP ON PR.id_product = SP.id_product" +
+                " INNER JOIN Sale SL ON SL.UPC = SP.UPC" +
+                " INNER JOIN Checks CK ON CK.check_number = SL.check_number" +
+                " INNER JOIN Employee EMP ON EMP.id_employee = CK.id_employee" +
+                " WHERE P.id_product = PR.id_product" +
+                " AND EM.id_employee = EMP.id_employee" +
+                " AND EM.empl_role = 'Cashier'))";
+        return jdbcTemplate.query(sql, new EmployeeInfoRowMapper());
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)

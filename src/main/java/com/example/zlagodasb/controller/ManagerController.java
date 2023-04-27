@@ -542,4 +542,30 @@ public class ManagerController {
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
+
+    @GetMapping("/getCashiersWhoSoldMoreThanAverage")
+    public ResponseEntity<List<Map<String, Object>>> getCashiersWhoSoldMoreThanAverage() {
+        try {
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.getCashiersWhoSoldMoreThanAverage()) {
+                result.add(employeeInfo.toMap());
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getCashiersWhoSoldAllProducts")
+    public ResponseEntity<List<Map<String, Object>>> getCashiersWhoSoldAllProducts() {
+        try {
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (EmployeeInfo employeeInfo : employeeService.getCashiersWhoSoldAllProducts()) {
+                result.add(employeeInfo.toMap());
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
 }
