@@ -55,10 +55,39 @@ public class CustomerCardRepo {
         return jdbcTemplate.query(sql, mapper, '%' + custSurname + '%');
     }
 
+    public List<CustomerCard> getClientsWhoBoughtMoreThanAverage() {
+        String sql = "SELECT CC.card_number, CC.cust_surname, CC.cust_name, CC.cust_patronymic," +
+                " CC.phone_number, CC.city, CC.street, CC.zip_code, CC.percent, SUM(CH.sum_total) AS total_spent" +
+                " FROM Customer_Card CC INNER JOIN Checks CH ON CC.card_number = CH.card_number" +
+                " GROUP BY CC.card_number" +
+                " HAVING SUM(CH.sum_total) >" +
+                " (SELECT AVG(total_spent) AS avg_spent" +
+                " FROM (SELECT SUM(sum_total) AS total_spent" +
+                    " FROM Checks" +
+                    " WHERE card_number IS NOT NULL" +
+                    " GROUP BY card_number))";
+        return jdbcTemplate.query(sql, mapper);
+    }
+
+    public List<CustomerCard> getClientsWhoBoughtAllProducts() {
+        String sql = "SELECT CC.card_number, CC.cust_surname, CC.cust_name, CC.cust_patronymic," +
+                " CC.phone_number, CC.city, CC.street, CC.zip_code, CC.percent" +
+                " WHERE NOT EXISTS (SELECT *" +
+                        " FROM Product P" +
+                        " WHERE NOT EXISTS (SELECT *" +
+                                " FROM Product PP INNER JOIN Store_Product SP ON PP.id_product = SP.id_product" +
+                                " INNER JOIN Sale SL ON SP.UPC = SL.UPC" +
+                                " INNER JOIN Checks CH ON SL.check_number = CH.check_number" +
+                                " INNER JOIN Customer_Card CCC ON CH.card_number = CCC.card_number" +
+                                " WHERE P.id_product = PP.id_product" +
+                                " AND CC.card_number = CCC.card_number))";
+        return jdbcTemplate.query(sql, mapper);
+    }
+
     //DEFAULT OPERATIONS
 
     @Transactional(readOnly=true)
-    public List<CustomerCard> findAll(){
+    public List<CustomerCard> findAll() {
         String sql = "SELECT * FROM " + tableName;
         return jdbcTemplate.query(sql, mapper);
     }
@@ -147,6 +176,7 @@ public class CustomerCardRepo {
             customerCard.setStreet(rs.getString("street"));
             customerCard.setZipCode(rs.getString("zip_code"));
             customerCard.setPercent(rs.getInt("percent"));
+            customerCard.setTotalSpent(rs.getBigDecimal("total_spent"));
             return customerCard;
         }
     }

@@ -32,6 +32,14 @@ public class CustomerCardService {
         return customerCardRepo.findAllByCustSurname(custSurname);
     }
 
+    public List<CustomerCard> getClientsWhoBoughtMoreThanAverage() {
+        return customerCardRepo.getClientsWhoBoughtMoreThanAverage();
+    }
+
+    public List<CustomerCard> getClientsWhoBoughtAllProducts() {
+        return customerCardRepo.getClientsWhoBoughtAllProducts();
+    }
+
     //DEFAULT OPERATIONS
 
     public List<CustomerCard> findAll() {

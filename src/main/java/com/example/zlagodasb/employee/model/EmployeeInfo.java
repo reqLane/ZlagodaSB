@@ -23,11 +23,13 @@ public class EmployeeInfo {
     private String city;
     private String street;
     private String zipCode;
+    private BigDecimal soldTotal;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("Employee ID", idEmployee);
         map.put("Name", emplFullName);
+        if(soldTotal != null) map.put("Sold total", soldTotal);
         map.put("Role", emplRole);
         map.put("Salary", salary);
         map.put("Date of birth", dateOfBirth);

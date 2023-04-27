@@ -1,5 +1,6 @@
 package com.example.zlagodasb.employee;
 
+import com.example.zlagodasb.employee.model.EmployeeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -163,6 +164,27 @@ public class EmployeeRepo {
             employee.setStreet(rs.getString("street"));
             employee.setZipCode(rs.getString("zip_code"));
             return employee;
+        }
+    }
+
+    private static class EmployeeInfoRowMapper implements RowMapper<EmployeeInfo> {
+        @Override
+        public EmployeeInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            EmployeeInfo employeeInfo = new EmployeeInfo();
+            employeeInfo.setIdEmployee(rs.getString("id_employee"));
+            employeeInfo.setEmplFullName(rs.getString("empl_surname") + " " +
+                    rs.getString("empl_name") +
+                    (rs.getString("empl_patronymic") != null ? (" " + rs.getString("empl_patronymic")) : ""));
+            employeeInfo.setEmplRole(rs.getString("empl_role"));
+            employeeInfo.setSalary(rs.getBigDecimal("salary"));
+            employeeInfo.setDateOfBirth(rs.getDate("date_of_birth"));
+            employeeInfo.setDateOfStart(rs.getDate("date_of_start"));
+            employeeInfo.setPhoneNumber(rs.getString("phone_number"));
+            employeeInfo.setCity(rs.getString("city"));
+            employeeInfo.setStreet(rs.getString("street"));
+            employeeInfo.setZipCode(rs.getString("zip_code"));
+            employeeInfo.setSoldTotal(rs.getBigDecimal("sold_total"));
+            return employeeInfo;
         }
     }
 }

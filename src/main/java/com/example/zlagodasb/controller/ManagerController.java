@@ -514,4 +514,32 @@ public class ManagerController {
             return ResponseEntity.ok((long)-1);
         }
     }
+
+    //COMPLEX QUERIES
+
+    @GetMapping("/getClientsWhoBoughtMoreThanAverage")
+    public ResponseEntity<List<Map<String, Object>>> getClientsWhoBoughtMoreThanAverage() {
+        try {
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.getClientsWhoBoughtMoreThanAverage()) {
+                result.add(customerCard.toMap());
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getClientsWhoBoughtAllProducts")
+    public ResponseEntity<List<Map<String, Object>>> getClientsWhoBoughtAllProducts() {
+        try {
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (CustomerCard customerCard : customerCardService.getClientsWhoBoughtAllProducts()) {
+                result.add(customerCard.toMap());
+            }
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
 }
