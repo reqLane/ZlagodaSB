@@ -13,6 +13,7 @@ import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.product.ProductService;
 import com.example.zlagodasb.product.model.ProductInfo;
 import com.example.zlagodasb.sale.SaleService;
+import com.example.zlagodasb.sale.model.SaleModel;
 import com.example.zlagodasb.store_product.StoreProductService;
 import com.example.zlagodasb.store_product.model.StoreProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.example.zlagodasb.util.Utils.isNullOrEmpty;
 import static com.example.zlagodasb.util.Utils.parseIdFrom;
@@ -60,11 +58,25 @@ public class CashierController {
     //DATA OPERATIONS
 
     @PostMapping("/createCheck")
-    public ResponseEntity<Boolean> createCheck(@RequestBody CheckModel data) {
+    public ResponseEntity<Boolean> createCheck(@RequestBody Map<String, Object> data) {
         try {
-            if(isNullOrEmpty(data.getCardNumber())) data.setCardNumber(null);
+            CheckModel checkModel = new CheckModel();
+            checkModel.setIdEmployee((String)data.get("idEmployee"));
+            Object cardNumber = data.get("cardNumber");
+            if(cardNumber == null || isNullOrEmpty((String)cardNumber)) checkModel.setCardNumber(null);
+            else checkModel.setCardNumber(parseIdFrom((String)cardNumber));
 
-            Check saved = checkService.create(data);
+            List<LinkedHashMap<String, ?>> list = (ArrayList<LinkedHashMap<String, ?>>)data.get("saleModels");
+            List<SaleModel> saleModels = new ArrayList<>();
+            for (LinkedHashMap<String, ?> map : list) {
+                SaleModel saleModel = new SaleModel();
+                saleModel.setUPC((String)map.get("UPC"));
+                saleModel.setProductNumber((Integer)map.get("productNumber"));
+                saleModels.add(saleModel);
+            }
+            checkModel.setSaleModels(saleModels);
+
+            Check saved = checkService.create(checkModel);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.ok(false);
