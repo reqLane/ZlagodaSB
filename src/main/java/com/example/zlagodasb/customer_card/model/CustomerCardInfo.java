@@ -1,4 +1,4 @@
-package com.example.zlagodasb.customer_card;
+package com.example.zlagodasb.customer_card.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +11,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class CustomerCard {
-    public static final String TABLE_NAME = "Customer_Card";
-
+public class CustomerCardInfo {
     private String cardNumber;
     private String custSurname;
     private String custName;
@@ -23,11 +21,13 @@ public class CustomerCard {
     private String street;
     private String zipCode;
     private Integer percent;
+    private BigDecimal totalSpent;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("Card ID", cardNumber);
         map.put("Name", custSurname + " " + custName + (custPatronymic != null ? (" " + custPatronymic) : ""));
+        map.put("Total spent", totalSpent);
         map.put("Phone", phoneNumber);
         map.put("City", city);
         map.put("Street", street);

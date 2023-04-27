@@ -40,6 +40,7 @@ public class Employee {
         employeeInfo.setCity(city);
         employeeInfo.setStreet(street);
         employeeInfo.setZipCode(zipCode);
+        employeeInfo.setSoldTotal(null);
         return employeeInfo;
     }
 }

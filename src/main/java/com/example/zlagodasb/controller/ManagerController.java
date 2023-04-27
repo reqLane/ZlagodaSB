@@ -8,6 +8,7 @@ import com.example.zlagodasb.check.CheckService;
 import com.example.zlagodasb.check.model.CheckInfo;
 import com.example.zlagodasb.customer_card.CustomerCard;
 import com.example.zlagodasb.customer_card.CustomerCardService;
+import com.example.zlagodasb.customer_card.model.CustomerCardInfo;
 import com.example.zlagodasb.employee.model.EmployeeInfo;
 import com.example.zlagodasb.employee.model.EmployeeModel;
 import com.example.zlagodasb.employee.EmployeeService;
@@ -521,8 +522,8 @@ public class ManagerController {
     public ResponseEntity<List<Map<String, Object>>> getClientsWhoBoughtMoreThanAverage() {
         try {
             List<Map<String, Object>> result = new ArrayList<>();
-            for (CustomerCard customerCard : customerCardService.getClientsWhoBoughtMoreThanAverage()) {
-                result.add(customerCard.toMap());
+            for (CustomerCardInfo customerCardInfo : customerCardService.getClientsWhoBoughtMoreThanAverage()) {
+                result.add(customerCardInfo.toMap());
             }
             return ResponseEntity.ok(result);
         } catch (Exception e) {

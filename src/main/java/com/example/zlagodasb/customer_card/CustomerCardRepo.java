@@ -1,5 +1,6 @@
 package com.example.zlagodasb.customer_card;
 
+import com.example.zlagodasb.customer_card.model.CustomerCardInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,7 +56,8 @@ public class CustomerCardRepo {
         return jdbcTemplate.query(sql, mapper, '%' + custSurname + '%');
     }
 
-    public List<CustomerCard> getClientsWhoBoughtMoreThanAverage() {
+    @Transactional(readOnly=true)
+    public List<CustomerCardInfo> getClientsWhoBoughtMoreThanAverage() {
         String sql = "SELECT CC.card_number, CC.cust_surname, CC.cust_name, CC.cust_patronymic," +
                 " CC.phone_number, CC.city, CC.street, CC.zip_code, CC.percent, SUM(CH.sum_total) AS total_spent" +
                 " FROM Customer_Card CC INNER JOIN Checks CH ON CC.card_number = CH.card_number" +
@@ -69,9 +71,11 @@ public class CustomerCardRepo {
         return jdbcTemplate.query(sql, mapper);
     }
 
+    @Transactional(readOnly=true)
     public List<CustomerCard> getClientsWhoBoughtAllProducts() {
         String sql = "SELECT CC.card_number, CC.cust_surname, CC.cust_name, CC.cust_patronymic," +
                 " CC.phone_number, CC.city, CC.street, CC.zip_code, CC.percent" +
+                " FROM Customer_Card CC" +
                 " WHERE NOT EXISTS (SELECT *" +
                         " FROM Product P" +
                         " WHERE NOT EXISTS (SELECT *" +
@@ -176,8 +180,25 @@ public class CustomerCardRepo {
             customerCard.setStreet(rs.getString("street"));
             customerCard.setZipCode(rs.getString("zip_code"));
             customerCard.setPercent(rs.getInt("percent"));
-            customerCard.setTotalSpent(rs.getBigDecimal("total_spent"));
             return customerCard;
+        }
+    }
+
+    private static class CustomerCardInfoRowMapper implements RowMapper<CustomerCardInfo> {
+        @Override
+        public CustomerCardInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CustomerCardInfo customerCardInfo = new CustomerCardInfo();
+            customerCardInfo.setCardNumber(rs.getString("card_number"));
+            customerCardInfo.setCustSurname(rs.getString("cust_surname"));
+            customerCardInfo.setCustName(rs.getString("cust_name"));
+            customerCardInfo.setCustPatronymic(rs.getString("cust_patronymic"));
+            customerCardInfo.setPhoneNumber(rs.getString("phone_number"));
+            customerCardInfo.setCity(rs.getString("city"));
+            customerCardInfo.setStreet(rs.getString("street"));
+            customerCardInfo.setZipCode(rs.getString("zip_code"));
+            customerCardInfo.setPercent(rs.getInt("percent"));
+            customerCardInfo.setTotalSpent(rs.getBigDecimal("total_spent"));
+            return customerCardInfo;
         }
     }
 }

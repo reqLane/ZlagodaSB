@@ -1,5 +1,6 @@
 package com.example.zlagodasb.customer_card;
 
+import com.example.zlagodasb.customer_card.model.CustomerCardInfo;
 import com.example.zlagodasb.customer_card.model.CustomerCardModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -32,7 +33,7 @@ public class CustomerCardService {
         return customerCardRepo.findAllByCustSurname(custSurname);
     }
 
-    public List<CustomerCard> getClientsWhoBoughtMoreThanAverage() {
+    public List<CustomerCardInfo> getClientsWhoBoughtMoreThanAverage() {
         return customerCardRepo.getClientsWhoBoughtMoreThanAverage();
     }
 
