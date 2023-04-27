@@ -53,7 +53,7 @@ public class EmployeeRepo {
     public List<Employee> findAllWithEmplSurnameContains(String surname) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE empl_surname LIKE ?";
-        return jdbcTemplate.query(sql, mapper, '%' + surname + '%');
+        return jdbcTemplate.query(sql, mapper, "%" + surname + "%");
     }
 
     @Transactional(readOnly=true)

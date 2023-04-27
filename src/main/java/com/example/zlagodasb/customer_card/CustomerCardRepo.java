@@ -68,7 +68,7 @@ public class CustomerCardRepo {
                     " FROM Checks" +
                     " WHERE card_number IS NOT NULL" +
                     " GROUP BY card_number))";
-        return jdbcTemplate.query(sql, mapper);
+        return jdbcTemplate.query(sql, new CustomerCardInfoRowMapper());
     }
 
     @Transactional(readOnly=true)
