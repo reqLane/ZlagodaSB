@@ -33,11 +33,9 @@ public class CheckInfo {
         map.put("Print date", printDate);
         map.put("Total sum", sumTotal);
         map.put("VAT", vat);
-        List<Map<String, Object>> salesInfoMaps = new ArrayList<>();
         for (SaleInfo saleInfo : salesInfo) {
-            salesInfoMaps.add(saleInfo.toMap());
+            map.put(saleInfo.getProductName(), "Amount:" + saleInfo.getProductNumber() + " Price:" + saleInfo.getSellingPrice());
         }
-        map.put("salesInfo", salesInfoMaps);
         return map;
     }
 }
