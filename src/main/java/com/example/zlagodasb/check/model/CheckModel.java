@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ public class CheckModel {
     private String idEmployee;
     private String cardNumber;
 
-    private List<SaleModel> saleModels;
+    private List<SaleModel> saleModels = new ArrayList<>();
 
     public Check toEntity() {
         Check entity = new Check();
