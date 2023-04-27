@@ -57,9 +57,9 @@ public class CheckRepo {
 
     @Transactional(readOnly=true)
     public List<CheckInfo> getChecksInfoOfCashierInPeriod(String idCashier, Timestamp startDate, Timestamp endDate) {
-        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+        String sql = "SELECT Checks.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
                 " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
-                " Check.print_date, Check.sum_total, Check.vat" +
+                " Checks.print_date, Checks.sum_total, Checks.vat" +
                 " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
                 " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
                 " WHERE Checks.id_employee = ?" +
@@ -69,9 +69,9 @@ public class CheckRepo {
 
     @Transactional(readOnly=true)
     public List<CheckInfo> getAllChecksInfoInPeriod(Timestamp startDate, Timestamp endDate) {
-        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+        String sql = "SELECT Checks.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
                 " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
-                " Check.print_date, Check.sum_total, Check.vat" +
+                " Checks.print_date, Checks.sum_total, Checks.vat" +
                 " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
                 " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
                 " WHERE Check.print_date BETWEEN ? AND ?";
@@ -80,9 +80,9 @@ public class CheckRepo {
 
     @Transactional(readOnly=true)//distinct
     public CheckInfo getCheckInfoByCheckNumber(String checkNumber) {
-        String sql = "SELECT Check.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
+        String sql = "SELECT Checks.check_number, Employee.empl_surname, Employee.empl_name, Employee.empl_patronymic," +
                 " Customer_Card.cust_surname, Customer_Card.cust_name, Customer_Card.cust_patronymic," +
-                " Check.print_date, Check.sum_total, Check.vat" +
+                " Checks.print_date, Checks.sum_total, Checks.vat" +
                 " FROM Checks INNER JOIN Employee ON Checks.id_employee = Employee.id_employee" +
                 " INNER JOIN Customer_Card ON Checks.card_number = Customer_Card.card_number" +
                 " WHERE Check.check_number = ?";
