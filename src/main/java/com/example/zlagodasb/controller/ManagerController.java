@@ -473,7 +473,7 @@ public class ManagerController {
     @PostMapping("/getTotalIncomeFromChecksOfCashierInPeriod")
     public ResponseEntity<BigDecimal> getTotalIncomeFromChecksOfCashierInPeriod(@RequestBody Map<String, String> data) {
         try {
-            String idCashier = data.get("idCashier");
+            String idCashier = parseIdFrom(data.get("idCashier"));
 
             Timestamp startDate = new Timestamp(Date.valueOf(data.get("startDate")).getTime());
             Timestamp endDate = new Timestamp(Date.valueOf(data.get("endDate")).getTime());

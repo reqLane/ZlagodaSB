@@ -73,7 +73,11 @@ public class EmployeeService {
     }
 
     public List<EmployeeInfo> getCashiersWhoSoldAllProducts() {
-        return employeeRepo.getCashiersWhoSoldAllProducts();
+        List<EmployeeInfo> result = new ArrayList<>();
+        for (Employee employee : employeeRepo.getCashiersWhoSoldAllProducts()) {
+            result.add(employee.toInfo());
+        }
+        return result;
     }
 
     //DEFAULT OPERATIONS

@@ -71,9 +71,8 @@ public class EmployeeRepo {
     }
 
     @Transactional(readOnly=true)
-    public List<EmployeeInfo> getCashiersWhoSoldAllProducts() {
-        String sql = "SELECT EM.id_employee, EM.empl_surname, EM.empl_name, EM.empl_patronymic, EM.empl_role," +
-                " EM.salary, EM.date_of_birth, EM.date_of_start, EM.phone_number, EM.city, EM.street, EM.zip_code" +
+    public List<Employee> getCashiersWhoSoldAllProducts() {
+        String sql = "SELECT EM.id_employee, EM.password, EM.empl_surname, EM.empl_name, EM.empl_patronymic, EM.empl_role, EM.salary, EM.date_of_birth, EM.date_of_start, EM.phone_number, EM.city, EM.street, EM.zip_code" +
                 " FROM Employee EM" +
                 " WHERE NOT EXISTS (SELECT *" +
                 " FROM Product P" +
@@ -85,7 +84,7 @@ public class EmployeeRepo {
                 " WHERE P.id_product = PR.id_product" +
                 " AND EM.id_employee = EMP.id_employee" +
                 " AND EM.empl_role = 'Cashier'))";
-        return jdbcTemplate.query(sql, new EmployeeInfoRowMapper());
+        return jdbcTemplate.query(sql, mapper);
     }
 
     //DEFAULT OPERATIONS

@@ -61,7 +61,7 @@ public class MutualController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
-            response.put("authenticated", "true");
+            response.put("authenticated", "false");
             response.put("emplRole", null);
             response.put("idEmployee", null);
             response.put("exception", e.getMessage());
